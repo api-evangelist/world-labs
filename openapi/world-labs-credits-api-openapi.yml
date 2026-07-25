@@ -1,0 +1,48 @@
+openapi: 3.1.0
+info:
+  description: Public-facing API for the Marble platform
+  summary: Marble Public API v1
+  title: Marble Public API v1 credits API
+  version: 1.0.0
+servers:
+- description: World API
+  url: https://api.worldlabs.ai
+security:
+- ApiKeyAuth: []
+tags:
+- name: credits
+paths:
+  /marble/v1/credits:
+    get:
+      description: "Get remaining API credits for the authenticated user.\n\nReturns:\n    CreditsResponse with the current aggregate API credit balance.\n\nRaises:\n    HTTPException: 404 if the caller is not an API-enabled user\n    HTTPException: 503 if the billing backend is unavailable"
+      operationId: get_credits_marble_v1_credits_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditsResponse'
+          description: Successful Response
+      summary: Get Credits
+      tags:
+      - credits
+components:
+  schemas:
+    CreditsResponse:
+      description: Remaining credits for the authenticated API user.
+      properties:
+        remaining_credits:
+          description: Remaining API credits available to the authenticated user.
+          minimum: 0
+          title: Remaining Credits
+          type: number
+      required:
+      - remaining_credits
+      title: CreditsResponse
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      description: API key for authentication. Get your key from the developer portal.
+      in: header
+      name: WLT-Api-Key
+      type: apiKey
