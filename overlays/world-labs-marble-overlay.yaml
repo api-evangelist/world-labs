@@ -1,0 +1,38 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Marble Public API v1
+  version: 1.0.0
+extends: openapi/world-labs-marble-openapi-original.yml
+x-generated: '2026-07-21'
+x-method: generated
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: world-labs
+      x-apievangelist-rating-notes: >-
+        Spec published at https://docs.worldlabs.ai/api/reference/openapi.yaml.
+        Strong schema coverage (46 component schemas, examples on request
+        bodies); operationIds are FastAPI-generated (verbose); no 401/429
+        responses declared even though the API enforces API-key auth and rate
+        limits; errors use a detail-field envelope, not RFC 9457.
+      contact:
+        email: support@worldlabs.ai
+        url: https://docs.worldlabs.ai/api
+      x-pricing: https://docs.worldlabs.ai/api/pricing
+      x-rate-limits: https://docs.worldlabs.ai/api/rate-limits
+  - target: $.info
+    update:
+      x-agent-guidance: >-
+        Authenticate with the WLT-Api-Key header. worlds:generate returns an
+        operation_id; poll GET /marble/v1/operations/{operation_id} until done
+        is true (generations take about 5 minutes). Upload local media via
+        media-assets:prepare_upload before generation. On 429 honor
+        Retry-After with exponential backoff and jitter.
+  - target: $.paths['/marble/v1/worlds:generate'].post
+    update:
+      x-long-running: true
+      x-cost-credits: "150 (draft) to 1,500-3,000 (standard/plus) plus 0-100 pano generation, per https://docs.worldlabs.ai/api/pricing"
+  - target: $.paths['/marble/v1/worlds/{world_id}:export'].post
+    update:
+      x-long-running: true
+      x-cost-credits: "HQ mesh export 3,500; PLY splat export free"

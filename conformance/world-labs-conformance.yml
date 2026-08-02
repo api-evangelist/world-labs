@@ -1,0 +1,39 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/world-labs-marble-openapi-original.yml + https://docs.worldlabs.ai/api/errors.md
+description: >-
+  Cross-cutting standards conformance for the Marble Public API v1, derived
+  from the published OpenAPI and the error/rate-limit documentation. World
+  Labs publishes no compliance-certification program (no trust center, no SOC
+  2/ISO claims found), so no Compliance pointer is emitted.
+standards:
+  - id: openapi-3.1
+    conforms: true
+    evidence: published spec at https://docs.worldlabs.ai/api/reference/openapi.yaml declares openapi 3.1.x
+  - id: api-key-auth
+    conforms: true
+    evidence: securitySchemes.ApiKeyAuth type apiKey in header (WLT-Api-Key) applied globally
+  - id: oauth2
+    conforms: false
+    evidence: no oauth2 securitySchemes in the spec; API keys only
+  - id: oidc
+    conforms: false
+    evidence: no openIdConnect scheme; /.well-known/openid-configuration 404 on all hosts
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: errors use a JSON detail-field envelope (FastAPI style), not application/problem+json
+  - id: pagination-cursor
+    conforms: true
+    evidence: worlds:list uses page_size (1-100) + opaque page_token cursor with next_page_token in responses
+  - id: idempotency-key
+    conforms: false
+    evidence: no Idempotency-Key header or idempotency contract documented
+  - id: rate-limit-signaling
+    conforms: true
+    evidence: 429 with Retry-After documented at https://docs.worldlabs.ai/api/rate-limits
+  - id: long-running-operations
+    conforms: true
+    evidence: async jobs return Operation resources polled via GET /marble/v1/operations/{operation_id} (done/error/response)
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt 404 on all hosts; disclosure policy published at https://www.worldlabs.ai/security instead

@@ -1,4 +1,17 @@
 aid: world-labs
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/world-labs.png
 name: World Labs
 description: 'World Labs is a company surfaced as a portfolio company of sv-angel and added to the API
   Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment
@@ -16,12 +29,34 @@ modified: '2026-07-17'
 tags:
 - Company
 - Ai
-apis: []
+apis:
+- aid: world-labs:world-labs-credits-api
+  name: World Labs credits API
+  description: The credits API from World Labs — 1 operation(s) for credits.
+  tags:
+  - credits
+  properties:
+  - type: OpenAPI
+    url: openapi/world-labs-credits-api-openapi.yml
+- aid: world-labs:world-labs-marble-api
+  name: World Labs Marble API
+  description: The Marble API from World Labs — 8 operation(s) for marble.
+  tags:
+  - Marble
+  properties:
+  - type: OpenAPI
+    url: openapi/world-labs-marble-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: VulnerabilityDisclosure
+  url: security/world-labs-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/world-labs-domain-security.yml
+- type: Authentication
+  url: authentication/world-labs-authentication.yml
 - type: Website
   url: https://worldlabs.ai

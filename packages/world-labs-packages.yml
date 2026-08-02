@@ -1,0 +1,38 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.worldlabs.ai/api/examples.md + https://github.com/worldlabsai
+description: >-
+  First-party World Labs client libraries and developer tooling. World Labs
+  ships its Python client and API examples from the worldlabsai GitHub org
+  (installed from source — no PyPI distribution as of this pass: pypi
+  worldlabs/worldlabs-api/world-labs all 404). SparkJS is the World
+  Labs-recommended open-source Gaussian-splat renderer for the web, published
+  on npm and linked as the developer tool from worldlabs.ai.
+packages:
+  - language: python
+    registry: github
+    name: worldlabs-api-python
+    url: https://github.com/worldlabsai/worldlabs-api-python
+    install: pip install git+https://github.com/worldlabsai/worldlabs-api-python.git
+    description: World Labs public API Python client with splat helpers (httpx + pydantic; save/load splats, render videos).
+    official: true
+  - language: javascript
+    registry: npm
+    name: "@sparkjsdev/spark"
+    url: https://www.npmjs.com/package/@sparkjsdev/spark
+    source: https://github.com/sparkjs-dev/spark
+    homepage: https://sparkjs.dev/
+    install: npm install @sparkjsdev/spark
+    description: >-
+      Advanced 3D Gaussian Splatting renderer for THREE.js — the recommended
+      way to render World Labs splat assets (SPZ, PLY, SOGS, KSPLAT, SPLAT) in
+      the browser. World Labs-created open-source project maintained in the
+      sparkjs-dev org.
+    official: true
+  - language: multiple
+    registry: github
+    name: worldlabs-api-examples
+    url: https://github.com/worldlabsai/worldlabs-api-examples
+    install: git clone https://github.com/worldlabsai/worldlabs-api-examples.git
+    description: Minimal Node and Python scripts plus a simple web app for generating worlds with the raw World API (experimentation, not production).
+    official: true

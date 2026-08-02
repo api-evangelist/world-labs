@@ -1,0 +1,33 @@
+generated: '2026-07-21'
+method: derived
+source: >-
+  Derived from the component schemas and $ref/id-reference fields in
+  openapi/world-labs-marble-openapi-original.yml (World, Operation,
+  MediaAsset, prompts, assets) plus the API reference at
+  https://docs.worldlabs.ai/api/reference.
+docs: https://docs.worldlabs.ai/api/reference
+notation: >-
+  relationships use has_one / has_many / belongs_to with the referencing field
+  name; direction is from the entity that owns the reference.
+
+entities:
+  - {name: World, domain: worlds, description: A generated, persistent 3D world with splat/mesh/imagery assets and semantics metadata (metric_scale_factor, ground_plane_offset).}
+  - {name: Operation, domain: operations, description: A long-running job (world generation, mesh export, pano depth-to-RGB) polled until done; carries response, error, and cost.}
+  - {name: OperationCost, domain: operations, description: Credit cost of an operation, itemized as usage-event line items (OperationCostLineItem).}
+  - {name: OperationError, domain: operations, description: Failure detail (code, message) on a completed operation.}
+  - {name: MediaAsset, domain: media-assets, description: Uploaded input media (image, video, pano) referenced by world generation prompts; created via a signed-URL prepare_upload flow.}
+  - {name: WorldAssets, domain: worlds, description: Container of SplatAssets, MeshAssets, and ImageryAssets (including pano_url) for a world.}
+  - {name: Prompt, domain: prompts, description: World generation input — text, image, multi-image, video, depth-pano, or inpaint-pano variants; media carried as Content (data_base64 or uri) or MediaAssetReference.}
+  - {name: Permission, domain: worlds, description: Visibility flags on a world (public, allow_id_access).}
+  - {name: CreditsResponse, domain: billing, description: Remaining API credits for the authenticated user.}
+
+relationships:
+  - {from: Operation, to: World, type: has_one, via: response, description: A completed worlds:generate operation resolves to the generated World.}
+  - {from: Operation, to: OperationCost, type: has_one, via: cost}
+  - {from: OperationCost, to: OperationCostLineItem, type: has_many, via: line_items}
+  - {from: Operation, to: OperationError, type: has_one, via: error}
+  - {from: World, to: WorldAssets, type: has_one, via: assets}
+  - {from: World, to: WorldSemanticsMetadata, type: has_one, via: semantics_metadata}
+  - {from: World, to: Permission, type: has_one, via: permission}
+  - {from: Prompt, to: MediaAsset, type: belongs_to, via: media_asset_id, description: Image/video/pano prompts may reference an uploaded media asset (MediaAssetReference).}
+  - {from: World, to: Prompt, type: belongs_to, via: world_prompt, description: A world is generated from a world_prompt input.}

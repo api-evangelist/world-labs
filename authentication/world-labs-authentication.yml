@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/world-labs-marble-openapi-original.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: WLT-Api-Key
+  description: API key for authentication. Get your key from the developer portal.
+  sources:
+  - openapi/world-labs-marble-openapi-original.yml

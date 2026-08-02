@@ -1,0 +1,64 @@
+# World Labs
+
+## Docs
+
+- [AI agent skill](https://docs.worldlabs.ai/api/agent-skill.md): Install the World Labs API skill for coding agents
+- [Errors and troubleshooting](https://docs.worldlabs.ai/api/errors.md): How to read World API error responses and fix the most common failures, including 400 Bad request
+- [Tools & examples](https://docs.worldlabs.ai/api/examples.md): End-to-end examples for learning how to use the World API. These projects are intended for experimentation, not production use.
+- [Frequently asked questions](https://docs.worldlabs.ai/api/faq.md): Common questions and answers about the World API
+- [Quickstart](https://docs.worldlabs.ai/api/index.md): Learn how to use the World API
+- [Interactive World Examples](https://docs.worldlabs.ai/api/interactive-world-examples.md): Open-source examples that combine World Labs worlds with realtime rendering, physics, controllers, and creative tooling.
+- [Models](https://docs.worldlabs.ai/api/models.md): How Marble model names map to World API model parameters
+- [Pricing](https://docs.worldlabs.ai/api/pricing.md): Understanding API usage and credits
+- [Rate limits](https://docs.worldlabs.ai/api/rate-limits.md): Rate limits and throughput options for World API world generation
+- [Get credits](https://docs.worldlabs.ai/api/reference/credits/get.md): Get remaining API credits for the authenticated user.
+- [Credits](https://docs.worldlabs.ai/api/reference/credits/index.md): Check the API credit balance for the authenticated account.
+- [API reference](https://docs.worldlabs.ai/api/reference/index.md): Browse Marble Public API endpoints by resource.
+- [Get media asset](https://docs.worldlabs.ai/api/reference/media-assets/get.md): Get a media asset by ID.
+- [Media assets](https://docs.worldlabs.ai/api/reference/media-assets/index.md): Upload input media for world generation requests.
+- [Prepare media asset upload](https://docs.worldlabs.ai/api/reference/media-assets/prepare-upload.md): Prepare a media asset upload for use in world generation.
+- [OpenAPI spec](https://docs.worldlabs.ai/api/reference/openapi.md): View the OpenAPI specification file
+- [Get an operation](https://docs.worldlabs.ai/api/reference/operations/get.md): Get an operation by ID.
+- [Operations](https://docs.worldlabs.ai/api/reference/operations/index.md): Poll long-running API jobs until they complete.
+- [Depth to RGB](https://docs.worldlabs.ai/api/reference/pano/depth_to_rgb.md): Generate an RGB panorama from a depth panorama.
+- [Pano](https://docs.worldlabs.ai/api/reference/pano/index.md): Generate RGB panoramas from depth panorama inputs.
+- [Delete a world](https://docs.worldlabs.ai/api/reference/worlds/delete.md): Delete a world by ID.
+- [Export a world](https://docs.worldlabs.ai/api/reference/worlds/export.md): Export a generated world asset.
+- [Generate a world](https://docs.worldlabs.ai/api/reference/worlds/generate.md): Start world generation.
+- [Get a world](https://docs.worldlabs.ai/api/reference/worlds/get.md): Get a world by ID.
+- [Worlds](https://docs.worldlabs.ai/api/reference/worlds/index.md): Create worlds and manage API-generated world resources.
+- [List worlds](https://docs.worldlabs.ai/api/reference/worlds/list.md): List worlds with optional filters.
+- [Rendering Marble SPZ files in third-party engines](https://docs.worldlabs.ai/api/rendering-spz.md): Apply Marble splat scale metadata when rendering SPZ assets outside Marble.
+- [World generation examples](https://docs.worldlabs.ai/api/world-generation-examples.md): Example-based request patterns for generating worlds from text, images, panoramas, multiple images, and video.
+- [Welcome to Marble](https://docs.worldlabs.ai/index.md): Marble helps you create high-fidelity, persistent 3D worlds.
+- [Chisel basics](https://docs.worldlabs.ai/marble/create/chisel-tools/chisel-basics.md): Create detailed 3D worlds from coarse 3D blocking.
+- [Overview](https://docs.worldlabs.ai/marble/create/index.md): Ways to generate new worlds with prompts, images, video, and Chisel
+- [Create & edit](https://docs.worldlabs.ai/marble/create/prompt-guides/create-and-edit.md): Multi-stage advanced workflow for pixel-perfect world creation
+- [Expand](https://docs.worldlabs.ai/marble/create/prompt-guides/expand.md): Expand: Improving low fidelity regions of your world.
+- [Image prompt tips](https://docs.worldlabs.ai/marble/create/prompt-guides/image-prompt.md): How to create sharp scenes with image prompt
+- [Prompt guidelines](https://docs.worldlabs.ai/marble/create/prompt-guides/index.md): Input requirements and specifications for Marble world generation
+- [Multi-image prompt tips](https://docs.worldlabs.ai/marble/create/prompt-guides/multi-image-prompt.md): Specify more details by combining multiple images.
+- [Pano prompt tips](https://docs.worldlabs.ai/marble/create/prompt-guides/pano-prompt.md): Use panoramas for maximum control over the world.
+- [Video prompt tips](https://docs.worldlabs.ai/marble/create/prompt-guides/video-prompt.md): How to create a world with a video
+- [Compose](https://docs.worldlabs.ai/marble/create/studio-tools/compose.md): Connect and arrange multiple worlds to create larger, seamless environments for games and experiences.
+- [Record](https://docs.worldlabs.ai/marble/create/studio-tools/record.md): Create cinematic camera animations and record smooth flythrough videos of your worlds.
+- [Edit worlds](https://docs.worldlabs.ai/marble/edit/index.md): Modify and iterate on generated worlds using pano editing, expansion, and variations.
+- [Pano edit](https://docs.worldlabs.ai/marble/edit/pano-edit.md): Edit your world easily by editing a panorama.
+- [Variations](https://docs.worldlabs.ai/marble/edit/variations.md)
+- [Exporting to Blender](https://docs.worldlabs.ai/marble/export/gaussian-splat/blender.md): Import Marble worlds into Blender using Gaussian Splatting plugins
+- [Exporting to Houdini](https://docs.worldlabs.ai/marble/export/gaussian-splat/houdini.md): Import Marble worlds into Houdini using Gaussian Splatting plugins
+- [Exporting from Marble](https://docs.worldlabs.ai/marble/export/gaussian-splat/index.md): Take your Marble content to popular 3D engines and platforms!
+- [Exporting to dev frameworks](https://docs.worldlabs.ai/marble/export/gaussian-splat/spark.md): Take Marble into your own custom apps!
+- [Exporting to Unity](https://docs.worldlabs.ai/marble/export/gaussian-splat/unity.md): Import Marble worlds into Unity using Gaussian Splatting plugins
+- [Exporting to Unreal Engine](https://docs.worldlabs.ai/marble/export/gaussian-splat/unreal.md): Import Marble worlds into Unreal Engine using Gaussian Splatting plugins
+- [Mesh export](https://docs.worldlabs.ai/marble/export/mesh.md)
+- [Export file specs](https://docs.worldlabs.ai/marble/export/specs.md): Tech specs on export files
+- [Models](https://docs.worldlabs.ai/marble/models.md): An overview of available Marble models
+- [Release notes](https://docs.worldlabs.ai/marble/release-notes.md): Latest updates and improvements to Marble
+- [Subscriptions & billing](https://docs.worldlabs.ai/marble/support/account-billing.md): Manage your Marble subscription, credits, and billing settings.
+- [FAQ](https://docs.worldlabs.ai/marble/support/faq.md): Common questions and answers about Marble!
+- [Support & feedback](https://docs.worldlabs.ai/marble/support/support-feedback.md): Join our community, get support, and share feedback to help shape the future of Marble.
+
+## OpenAPI Specs
+
+- [openapi](https://docs.worldlabs.ai/api/reference/openapi.yaml)

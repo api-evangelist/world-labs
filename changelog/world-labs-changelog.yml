@@ -1,0 +1,44 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.worldlabs.ai/marble/release-notes.md
+description: >-
+  Structured capture of World Labs' dated Marble release notes (the one dated
+  changelog they publish; it covers both the Marble app and API-relevant
+  changes such as new models and API limits). The API itself is URI-versioned
+  at /marble/v1; model availability is the primary evolution axis.
+docs: https://docs.worldlabs.ai/marble/release-notes
+versioning:
+  scheme: dated release notes; API URI-path v1; models versioned as marble-1.0/1.1/1.1-plus
+  current_api: /marble/v1
+  current_models: [marble-1.1-plus, marble-1.1, marble-1.0, marble-1.0-draft]
+  detail: lifecycle/world-labs-lifecycle.yml
+entries:
+  - date: '2026-04-02'
+    latest: true
+    highlights:
+      - Added Marble 1.1 and Marble 1.1 Plus models (existing models renamed Marble 1.0 / Marble 1.0 Draft)
+      - Model used per world/draft now visible on the assets page
+      - Advanced editing exposed as Create & edit in the omnibox
+  - date: '2026-01-29'
+    highlights:
+      - Meshes can now be imported into Composer
+      - Video prompt file size limit for the API increased to 100MB
+  - date: '2026-01-01'
+    highlights:
+      - Improved export options; assets roughly scaled and grounded to real-world units
+      - Choice of OpenGL vs OpenCV coordinate systems
+      - Customizable high-quality mesh export preferences (vertex-colored vs textured)
+  - date: '2025-12-18'
+    highlights:
+      - Chisel copy and paste; clearer Expand-mode guidance on valid regions
+  - date: '2025-12-11'
+    highlights:
+      - Studio Record mode gains movable preview and expanded video export settings
+      - World exports switch to OpenGL coordinate system; SPZ v2 default for Studio splat exports
+  - date: '2025-12-05'
+    highlights:
+      - 360-degree panorama screenshots; pano-edit model upgrade (cost adjusted 50 to 150 credits)
+  - date: '2025-11-20'
+    highlights:
+      - Level-of-Detail splat-rendering backend for larger worlds in Studio
+      - World IDs displayed in the Worlds section

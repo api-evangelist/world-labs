@@ -1,0 +1,74 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.worldlabs.ai/api (quickstart), /api/errors.md, /api/rate-limits.md,
+  /api/pricing.md + derived from openapi/world-labs-marble-openapi-original.yml
+description: >-
+  Cross-cutting request/response semantics of the World API (Marble Public API
+  v1): API-key auth, cursor pagination, long-running Operation polling, the
+  detail-field error envelope, request-id tracing, and rate-limit signaling.
+  No idempotency contract is published, so no Idempotency pointer is emitted.
+
+base_url: https://api.worldlabs.ai
+api_style: REST over HTTPS, JSON requests and responses; custom-method paths use the `resource:action` Google AIP style (worlds:generate, worlds:list, media-assets:prepare_upload, pano:depth_to_rgb).
+
+authentication:
+  scheme: API key in the WLT-Api-Key request header (not bearer auth)
+  key_source: https://platform.worldlabs.ai/api-keys
+  docs: https://docs.worldlabs.ai/api
+  detail: authentication/world-labs-authentication.yml
+
+idempotency:
+  supported: false
+  notes: No Idempotency-Key header or retry-safety contract is documented; a 429-rejected generate has not been accepted and is safe to retry.
+
+pagination:
+  style: cursor
+  request_params:
+    page_size: 1-100 (worlds:list; docs cite default 10)
+    page_token: opaque base64 cursor from the previous response
+  response_fields:
+    next_page_token: token for fetching the next page of results
+  applies_to: POST /marble/v1/worlds:list
+
+long_running_operations:
+  pattern: >-
+    Asynchronous jobs (worlds:generate, worlds:{id}:export mesh, pano:depth_to_rgb)
+    return an Operation; poll GET /marble/v1/operations/{operation_id} until
+    done is true, then read response (result) or error (OperationError with
+    code and message). World generation usually takes about 5 minutes.
+  docs: https://docs.worldlabs.ai/api/reference/operations
+
+request_tracing:
+  field: request_id
+  notes: >-
+    Included in many response bodies; a trace identifier for the World Labs
+    team — quote it (with endpoint and redacted request body) to
+    support@worldlabs.ai.
+
+versioning:
+  scheme: uri-path (/marble/v1)
+  detail: lifecycle/world-labs-lifecycle.yml
+
+error_envelope:
+  shape: JSON body with a `detail` field; 422 validation errors return detail as an array of {loc, msg, type}
+  format: not RFC 9457
+  detail: errors/world-labs-problem-types.yml
+
+rate_limiting:
+  signaling: 429 Too Many Requests, with Retry-After on some responses; retry with exponential backoff and jitter
+  default_limits: about 3 world-generation starts/minute and 60/hour per API user or account (not per key)
+  detail: rate-limits/world-labs-rate-limits.yml
+  docs: https://docs.worldlabs.ai/api/rate-limits
+
+media_inputs:
+  inline_limit: direct data_base64 storage up to 10MB; URL references up to 20MB; video prompts up to 100MB via media assets
+  server_fetch: >-
+    source: "uri" inputs are fetched server-side with no cookies, auth, or
+    referer — hotlink-protected hosts fail with 400; upload as a media asset
+    (media-assets:prepare_upload signed URL flow) or inline as data_base64.
+
+billing_semantics:
+  model: credit-based; $1.00 = 1,250 credits, purchased on https://platform.worldlabs.ai/billing (separate from Marble app credits)
+  free_calls: API key creation, media asset upload/management, and Operation polling consume no credits
+  docs: https://docs.worldlabs.ai/api/pricing

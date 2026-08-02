@@ -1,0 +1,30 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.worldlabs.ai/api/models.md + https://docs.worldlabs.ai/marble/release-notes.md
+description: >-
+  Lifecycle posture for the Marble Public API v1. Versioning is URI-path based
+  (/marble/v1). World Labs publishes dated release notes and documents
+  scheduled removals in the models reference (legacy Marble 0.1-* model values
+  and a default-model change), but no formal deprecation-policy page, no SLA,
+  and no public status page (status.worldlabs.ai does not resolve; none linked
+  from docs).
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /marble/v1
+  spec_version: 1.0.0
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notices:
+    - >-
+      Legacy model values `Marble 0.1-plus` (now marble-1.0) and `Marble
+      0.1-mini` (now marble-1.0-draft) are still accepted but support will be
+      removed in a future release (https://docs.worldlabs.ai/api/models).
+    - >-
+      The API default model (marble-1.0 when no model is specified) will
+      change to marble-1.1 in a future release.
+sla: null
+status_page: null
+release_notes: https://docs.worldlabs.ai/marble/release-notes
+deprecated_operations: []

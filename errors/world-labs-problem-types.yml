@@ -1,0 +1,62 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.worldlabs.ai/api/errors.md
+description: >-
+  World API error catalog from the published errors/troubleshooting reference,
+  cross-checked against the OpenAPI (which declares 402 and 422 responses;
+  400/401/404/429/500 are documented in the docs). Errors are not RFC 9457 —
+  most return a JSON body with a `detail` field (string, or an array of
+  {loc, msg, type} entries for 422 validation errors). Many responses include
+  a `request_id` trace identifier to quote to support@worldlabs.ai.
+format: detail-envelope
+envelope:
+  field: detail
+  validation_shape: "422 returns detail as an array of {loc: [path], msg, type} per invalid field"
+  trace_field: request_id
+problems:
+  - status: 400
+    title: Bad request
+    detail: >-
+      Request invalid or input violated content policy. Common causes: body is
+      not valid JSON (stringified map instead of serialized JSON), an input
+      URL World Labs cannot fetch server-side (hotlink-protected/login-gated),
+      content-policy rejection, invalid model value, or field constraints
+      (display_name over 64 chars, more than 10 tags).
+    remediation: >-
+      Read detail when present; serialize the payload with a JSON library and
+      set Content-Type: application/json; upload unfetchable media as a media
+      asset or inline via data_base64; use a supported model
+      (marble-1.0-draft, marble-1.0, marble-1.1, marble-1.1-plus).
+  - status: 401
+    title: Unauthorized
+    detail: Authentication problem with the WLT-Api-Key header.
+    remediation: Send a valid API key from https://platform.worldlabs.ai/api-keys.
+  - status: 402
+    title: Payment required
+    detail: The account has insufficient API credits. API credits are separate from Marble app credits.
+    remediation: Add credits or enable auto-refill at https://platform.worldlabs.ai/billing.
+    source_operation: openapi/world-labs-marble-openapi-original.yml#generate_world_marble_v1_worlds_generate_post
+  - status: 404
+    title: Not found
+    detail: The world, operation, or media asset does not exist or is not owned by your API user.
+    remediation: Verify the ID and that it was created with the same API key.
+  - status: 422
+    title: Unprocessable entity
+    detail: The body did not match the request schema; detail is an array with one entry per invalid field.
+    remediation: Read the field path in each detail[] entry (loc) and fix that field.
+    source_operation: openapi/world-labs-marble-openapi-original.yml#generate_world_marble_v1_worlds_generate_post
+  - status: 429
+    title: Too many requests
+    detail: A rate limit was exceeded (about 3 generation starts/minute and 60/hour by default).
+    remediation: Honor Retry-After, back off with exponential backoff and jitter; see https://docs.worldlabs.ai/api/rate-limits.
+  - status: 500
+    title: Internal server error
+    detail: The request could not be processed.
+    remediation: Retry after a short delay; contact support@worldlabs.ai with the request_id if it persists.
+async_failures:
+  description: >-
+    A worlds:generate call can return 200 with an operation_id and still fail
+    during generation. Poll GET /marble/v1/operations/{operation_id}; when
+    done is true with a non-null error, read error.code and error.message
+    (OperationError schema).
+  schema: openapi/world-labs-marble-openapi-original.yml#/components/schemas/OperationError
