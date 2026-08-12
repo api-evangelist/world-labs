@@ -52,6 +52,12 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgentSkill
+  url: skills/world-labs-marble-developer-api.md
+- type: MCPServer
+  url: mcp/world-labs-mcp.yml
+- type: Overlay
+  url: overlays/world-labs-marble-overlay.yaml
 - type: VulnerabilityDisclosure
   url: security/world-labs-vulnerability-disclosure.yml
 - type: DomainSecurity
