@@ -1,0 +1,131 @@
+{
+  "item": [
+    {
+      "id": "96fa1548-9f02-4198-a67d-b5f7291f87b4",
+      "name": "credits",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ec599554-4c0b-41ed-9864-2ad3959b9b29",
+          "name": "Get Credits",
+          "request": {
+            "name": "Get Credits",
+            "description": {
+              "content": "Get remaining API credits for the authenticated user.\n\nReturns:\n    CreditsResponse with the current aggregate API credit balance.\n\nRaises:\n    HTTPException: 404 if the caller is not an API-enabled user\n    HTTPException: 503 if the billing backend is unavailable",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "credits"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3aaeedb1-60d6-4558-9f1e-cabefb55869d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "credits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"remaining_credits\": 6329.488265574917\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.worldlabs.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "WLT-Api-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "984597c7-b141-4722-b218-3fd482aa8177",
+    "name": "Marble Public API v1 credits API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public-facing API for the Marble platform",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,1618 @@
+{
+  "item": [
+    {
+      "id": "1bd6a797-e8fe-44dc-a35b-bedb3e7966e4",
+      "name": "Marble",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "69077bf7-deaf-43aa-a7cd-baa7c3126074",
+          "name": "Get Media Asset",
+          "request": {
+            "name": "Get Media Asset",
+            "description": {
+              "content": "Get a media asset by ID.\n\nRetrieves metadata for a previously created media asset.\n\nArgs:\n    media_asset_id: The media asset identifier.\n\nReturns:\n    MediaAsset object with media_asset_id, file_name, extension, kind,\n    metadata, created_at, and updated_at.\n\nRaises:\n    HTTPException: 404 if not found",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "media-assets",
+                ":media_asset_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "media_asset_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5699b231-06e4-4575-8e87-a945ad16d946",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "media-assets",
+                    ":media_asset_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "media_asset_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"media_asset_id\": \"string\",\n  \"file_name\": \"string\",\n  \"kind\": \"image\",\n  \"created_at\": \"1954-03-21T19:54:42.765Z\",\n  \"extension\": \"string\",\n  \"metadata\": {\n    \"key_0\": 939.9530405237244\n  },\n  \"updated_at\": \"2012-06-04T15:23:35.160Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e6f3e469-ac7c-40fe-85e5-f4ddf1b47871",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "media-assets",
+                    ":media_asset_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "media_asset_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e9c57a8a-e69c-4fd4-973f-1a879f6401ab",
+          "name": "Prepare a media asset upload",
+          "request": {
+            "name": "Prepare a media asset upload",
+            "description": {
+              "content": "Prepare a media asset upload for use in world generation.\n\nThis API endpoint creates a media asset record and returns a signed upload URL.\nUse this workflow to upload images or videos that you want to reference in world\ngeneration requests.\n\n## Workflow\n\n1. **Prepare Upload** (this endpoint): Get a `media_asset_id` and `upload_url`\n2. **Upload File**: Use the signed URL to upload your file\n3. **Generate World**: Reference the `media_asset_id` in `/worlds:generate` with\n   source type \"media_asset\"\n\n## Request Parameters\n\n- `file_name`: Your file's name (e.g., \"landscape.jpg\")\n- `extension`: File extension without dot (e.g., \"jpg\", \"png\", \"mp4\")\n- `kind`: Either \"image\" or \"video\"\n- `metadata`: Optional custom metadata object\n\n## Response\n\nReturns a `MediaAssetPrepareUploadResponse` containing:\n\n- `media_asset`: Object with `media_asset_id` (use this in world generation)\n- `upload_info`: Object with `upload_url`, `required_headers`, and `curl_example`\n\n## Uploading Your File\n\nUse the returned `upload_url` and `required_headers` to upload your file:\n\n```bash\ncurl --request PUT \\\n  --url <upload_url> \\\n  --header \"Content-Type: <content-type>\" \\\n  --header \"<header-name>: <header-value>\" \\\n  --upload-file /path/to/your/file\n```\n\nReplace:\n- `<upload_url>`: The `upload_url` from the response\n- `<content-type>`: MIME type (e.g., `image/png`, `image/jpeg`, `video/mp4`)\n- `<header-name>: <header-value>`: Each header from `required_headers`\n- `/path/to/your/file`: Path to your local file\n\n## Example Usage in World Generation\n\nAfter uploading, use the `media_asset_id` in a world generation request:\n\n```json\n{\n  \"world_prompt\": {\n    \"type\": \"image\",\n    \"image_prompt\": {\n      \"source\": \"media_asset\",\n      \"media_asset_id\": \"<your-media-asset-id>\"\n    }\n  }\n}\n```",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "media-assets:prepare_upload"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"file_name\": \"<string>\",\n  \"kind\": \"<string>\",\n  \"extension\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 7005,\n    \"key_1\": false\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6a7cb849-7974-43fa-8a8d-4a96136d6162",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "media-assets:prepare_upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"file_name\": \"<string>\",\n  \"kind\": \"image\",\n  \"extension\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 8708.360445073913,\n    \"key_1\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"media_asset\": {\n    \"media_asset_id\": \"string\",\n    \"file_name\": \"string\",\n    \"kind\": \"image\",\n    \"created_at\": \"2017-07-04T01:24:01.789Z\",\n    \"extension\": \"string\",\n    \"metadata\": {\n      \"key_0\": true,\n      \"key_1\": true\n    },\n    \"updated_at\": \"1979-07-07T18:42:40.614Z\"\n  },\n  \"upload_info\": {\n    \"upload_url\": \"string\",\n    \"upload_method\": \"string\",\n    \"curl_example\": \"string\",\n    \"required_headers\": {\n      \"key_0\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "05745f91-2257-4c67-8bdb-1107a425d4d8",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "media-assets:prepare_upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"file_name\": \"<string>\",\n  \"kind\": \"image\",\n  \"extension\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 8708.360445073913,\n    \"key_1\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "516dd7fd-d12b-4ca3-bb2d-06d1925cd3e2",
+          "name": "Get Operation",
+          "request": {
+            "name": "Get Operation",
+            "description": {
+              "content": "Get an operation by ID.\n\nPoll this endpoint to check the status of a long-running operation.\nWhen done=true, the response field contains the generated world.\n\nArgs:\n    operation_id: The operation identifier from /worlds:generate.\n\nReturns:\n    GetOperationResponse[World] with:\n        - operation_id: Operation identifier\n        - created_at: Creation timestamp\n        - updated_at: Last update timestamp\n        - expires_at: Expiration timestamp\n        - done: true when complete, false while in progress\n        - error: Error details if failed, null otherwise\n        - metadata: Progress information and world_id\n        - response: Generated World if done=true, null otherwise\n        - cost: Settled credit cost breakdown; populated only when the\n          operation completed successfully (done=true with no error)\n          and a public price is known for its operation type. Failed\n          or in-progress operations return null.\n\nRaises:\n    HTTPException: 401 if unauthorized\n    HTTPException: 404 if operation not found\n    HTTPException: 500 if request fails",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "operations",
+                ":operation_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "operation_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "65b17ff7-368c-4453-ad8e-dd1d3510162d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "operations",
+                    ":operation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "operation_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"operation_id\": \"string\",\n  \"done\": false,\n  \"cost\": {\n    \"total_credits\": 6941,\n    \"line_items\": [\n      {\n        \"name\": \"string\",\n        \"credits\": 1226\n      },\n      {\n        \"name\": \"string\",\n        \"credits\": 1832\n      }\n    ]\n  },\n  \"created_at\": \"1996-11-17T17:30:30.521Z\",\n  \"error\": {\n    \"code\": 9717,\n    \"message\": \"string\"\n  },\n  \"expires_at\": \"1967-09-02T22:22:50.174Z\",\n  \"metadata\": {\n    \"key_0\": false,\n    \"key_1\": true\n  },\n  \"response\": {\n    \"world_id\": \"string\",\n    \"display_name\": \"string\",\n    \"world_marble_url\": \"string\",\n    \"assets\": {\n      \"caption\": \"string\",\n      \"imagery\": {\n        \"pano_url\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"mesh\": {\n        \"collider_mesh_url\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"full_res_mesh_url\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"hq_mesh_url\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"splats\": {\n        \"semantics_metadata\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"spz_urls\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"thumbnail_url\": \"string\"\n    },\n    \"created_at\": \"1974-01-09T22:41:08.104Z\",\n    \"model\": \"string\",\n    \"permission\": {\n      \"allow_id_access\": false,\n      \"allowed_readers\": [\n        \"string\",\n        \"string\"\n      ],\n      \"allowed_writers\": [\n        \"string\",\n        \"string\"\n      ],\n      \"public\": false\n    },\n    \"tags\": [\n      \"string\",\n      \"string\"\n    ],\n    \"updated_at\": \"1993-08-27T19:59:32.988Z\",\n    \"world_prompt\": {\n      \"text_prompt\": \"string\",\n      \"type\": \"text\"\n    }\n  },\n  \"updated_at\": \"2005-06-25T06:14:51.009Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98659950-2e4f-407f-8eb5-bbc68e3f3bde",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "operations",
+                    ":operation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "operation_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2c78dd41-ce7f-4095-ac74-26d3362f2578",
+          "name": "Pano Depth To Rgb",
+          "request": {
+            "name": "Pano Depth To Rgb",
+            "description": {
+              "content": "Generate an RGB panorama from a depth panorama.\n\nProvide a depth panorama and a text prompt\ndescribing the desired appearance. The depth map\nsupplies the scene geometry; the model synthesizes\ntextures that match that geometry and returns a\npanoramic RGB image.\n\nAccepted depth inputs:\n\n* **EXR**: float depth values. Omit\n  ``z_min`` and ``z_max``.\n* **PNG**: depth values normalized to [0, 1].\n  Provide both ``z_min`` and ``z_max`` so the\n  service can decode the PNG correctly.\n\nFor a complete PNG-based workflow, see the\n[web-chisel-depth-png example](https://github.com/worldlabsai/worldlabs-api-examples/tree/main/web-chisel-depth-png).\n\nReturns a long-running ``Operation``. Poll\n``GET /operations/{operation_id}`` until\n``done`` is ``true``, then read the generated\npanorama URL from ``response.pano_url``.\n\nRaises:\n    HTTPException: 400 if invalid request\n    HTTPException: 402 if insufficient credits\n    HTTPException: 500 if generation could not start",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "pano:depth_to_rgb"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"depth_pano_image\": {\n    \"media_asset_id\": \"<string>\",\n    \"source\": \"media_asset\"\n  },\n  \"text_prompt\": \"<string>\",\n  \"seed\": \"<integer>\",\n  \"z_max\": \"<number>\",\n  \"z_min\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "55563a63-affe-4418-b645-d7ccd0de8d2c",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "pano:depth_to_rgb"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"depth_pano_image\": {\n    \"media_asset_id\": \"string\",\n    \"source\": \"media_asset\"\n  },\n  \"text_prompt\": \"<string>\",\n  \"seed\": \"<integer>\",\n  \"z_max\": \"<number>\",\n  \"z_min\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"operation_id\": \"string\",\n  \"done\": false,\n  \"cost\": {\n    \"total_credits\": 9381,\n    \"line_items\": [\n      {\n        \"name\": \"string\",\n        \"credits\": 9466\n      },\n      {\n        \"name\": \"string\",\n        \"credits\": 2681\n      }\n    ]\n  },\n  \"created_at\": \"1982-12-03T08:16:07.483Z\",\n  \"error\": {\n    \"code\": 6687,\n    \"message\": \"string\"\n  },\n  \"expires_at\": \"1982-07-12T15:25:36.866Z\",\n  \"metadata\": {\n    \"key_0\": \"string\"\n  },\n  \"response\": {\n    \"pano_url\": \"string\"\n  },\n  \"updated_at\": \"1950-02-01T15:10:41.383Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4010b6c9-f4d6-4ad4-a4fe-b933fd3c63ae",
+              "name": "The account has insufficient API credits for this request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "pano:depth_to_rgb"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"depth_pano_image\": {\n    \"media_asset_id\": \"string\",\n    \"source\": \"media_asset\"\n  },\n  \"text_prompt\": \"<string>\",\n  \"seed\": \"<integer>\",\n  \"z_max\": \"<number>\",\n  \"z_min\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Insufficient API credits to start this request. Add credits or enable auto-refill at https://platform.worldlabs.ai/billing.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc6ef64d-91b9-43e7-a45b-541f460399e8",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "pano:depth_to_rgb"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"depth_pano_image\": {\n    \"media_asset_id\": \"string\",\n    \"source\": \"media_asset\"\n  },\n  \"text_prompt\": \"<string>\",\n  \"seed\": \"<integer>\",\n  \"z_max\": \"<number>\",\n  \"z_min\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "181b9690-29e6-4791-a5e1-d2c47f6cba97",
+          "name": "Delete World",
+          "request": {
+            "name": "Delete World",
+            "description": {
+              "content": "Delete a world by ID.\n\nPermanently deletes a world and its associated assets.\nOnly the world owner can delete a world.\n\nArgs:\n    world_id: The unique identifier of the world to delete.\n\nReturns:\n    DeleteWorldResponse confirming the deletion.\n\nRaises:\n    HTTPException: 403 if user is not the world owner\n    HTTPException: 404 if world not found\n    HTTPException: 500 if deletion fails",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "worlds",
+                ":world_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "world_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "33a5d32e-7c89-4956-b664-111c213ea739",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    ":world_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "world_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"world_id\": \"string\",\n  \"deleted\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "705e9c36-60e5-4408-8ab1-d3fd267c9881",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    ":world_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "world_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "98612475-7baf-407d-9b14-d06350ae90ba",
+          "name": "Get World",
+          "request": {
+            "name": "Get World",
+            "description": {
+              "content": "Get a world by ID.\n\nRetrieves a world's details including generated assets if available.\nOnly the world owner or users with access to public worlds can retrieve them.\n\nArgs:\n    world_id: The unique identifier of the world.\n\nReturns:\n    World object with world_id, display_name, tags, assets, created_at,\n    updated_at, permission, model, world_prompt, and world_marble_url.\n\nRaises:\n    HTTPException: 404 if world not found or access denied",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "worlds",
+                ":world_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "world_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "69ab04d2-4604-41c5-81ea-3739c97a24eb",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    ":world_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "world_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"world_id\": \"string\",\n  \"display_name\": \"string\",\n  \"world_marble_url\": \"string\",\n  \"assets\": {\n    \"caption\": \"string\",\n    \"imagery\": {\n      \"pano_url\": \"string\"\n    },\n    \"mesh\": {\n      \"collider_mesh_url\": \"string\",\n      \"full_res_mesh_url\": \"string\",\n      \"hq_mesh_url\": \"string\"\n    },\n    \"splats\": {\n      \"semantics_metadata\": {\n        \"ground_plane_offset\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"metric_scale_factor\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"spz_urls\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\",\n        \"key_2\": \"string\"\n      }\n    },\n    \"thumbnail_url\": \"string\"\n  },\n  \"created_at\": \"1947-01-10T11:55:12.227Z\",\n  \"model\": \"string\",\n  \"permission\": {\n    \"allow_id_access\": false,\n    \"allowed_readers\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowed_writers\": [\n      \"string\",\n      \"string\"\n    ],\n    \"public\": false\n  },\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"updated_at\": \"2014-07-21T00:01:36.406Z\",\n  \"world_prompt\": {\n    \"text_prompt\": \"string\",\n    \"type\": \"text\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78acf56b-85b0-4552-995c-369da5b74238",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    ":world_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "world_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "61bab2c4-7de2-4e79-b3d9-86a6b62f621d",
+          "name": "Export World",
+          "request": {
+            "name": "Export World",
+            "description": {
+              "content": "Export a generated world asset.\n\nPLY splat exports are converted synchronously, cached in GCS, and returned\nas completed operations. HQ mesh exports reuse the existing async mesh\nexport service and return an in-progress operation.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "worlds",
+                "{{world_id}}:export"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asset_type\": \"<string>\",\n  \"format\": \"<string>\",\n  \"mesh_variant\": \"textured\",\n  \"resolution\": \"full_res\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9a62a139-4a8a-4223-aad0-9c0f96f7ccc3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    "{{world_id}}:export"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"asset_type\": \"<string>\",\n  \"format\": \"<string>\",\n  \"mesh_variant\": \"textured\",\n  \"resolution\": \"full_res\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"operation_id\": \"string\",\n  \"done\": false,\n  \"cost\": {\n    \"total_credits\": 393,\n    \"line_items\": [\n      {\n        \"name\": \"string\",\n        \"credits\": 8759\n      },\n      {\n        \"name\": \"string\",\n        \"credits\": 6037\n      }\n    ]\n  },\n  \"created_at\": \"1960-08-19T05:01:27.918Z\",\n  \"error\": {\n    \"code\": 4488,\n    \"message\": \"string\"\n  },\n  \"expires_at\": \"1951-05-09T07:34:16.645Z\",\n  \"metadata\": {\n    \"key_0\": 1659,\n    \"key_1\": 4567,\n    \"key_2\": \"string\"\n  },\n  \"response\": {\n    \"asset_type\": \"mesh\",\n    \"format\": \"glb\",\n    \"url\": \"string\",\n    \"mesh_variant\": \"textured\",\n    \"resolution\": \"string\"\n  },\n  \"updated_at\": \"1977-10-31T18:13:43.968Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1843577-592d-4b99-923f-5851405802a6",
+              "name": "The account has insufficient API credits for this request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    "{{world_id}}:export"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"asset_type\": \"<string>\",\n  \"format\": \"<string>\",\n  \"mesh_variant\": \"textured\",\n  \"resolution\": \"full_res\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Insufficient API credits to start this request. Add credits or enable auto-refill at https://platform.worldlabs.ai/billing.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "253991c1-8503-45a7-90b6-a6ee58528432",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds",
+                    "{{world_id}}:export"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"asset_type\": \"<string>\",\n  \"format\": \"<string>\",\n  \"mesh_variant\": \"textured\",\n  \"resolution\": \"full_res\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3a5579c6-ef22-4b80-88f1-47f4ea5e2c96",
+          "name": "Generate World",
+          "request": {
+            "name": "Generate World",
+            "description": {
+              "content": "Start world generation.\n\nCreates a new world generation job and returns a long-running operation.\nPoll the /operations/{operation_id} endpoint to check generation status\nand retrieve the generated world when complete.\n\nArgs:\n    request: The world generation request containing world_prompt, display_name,\n        tags, model, seed, and permission settings.\n\nReturns:\n    GenerateWorldResponse with operation_id and timestamps. Use the operation_id\n    to poll for completion.\n\nRaises:\n    HTTPException: 400 if invalid request or content violates policies\n    HTTPException: 402 if insufficient credits\n    HTTPException: 500 if generation could not be started",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "worlds:generate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"world_prompt\": {\n    \"disable_recaption\": \"<boolean>\",\n    \"text_prompt\": \"<string>\",\n    \"type\": \"text\"\n  },\n  \"display_name\": \"<string>\",\n  \"model\": \"<string>\",\n  \"permission\": {\n    \"allow_id_access\": false,\n    \"allowed_readers\": [],\n    \"allowed_writers\": [],\n    \"public\": false\n  },\n  \"seed\": \"<integer>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1446bb49-eaf7-4efc-bacd-21fc2294485e",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds:generate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"display_name\": \"Coastal Castle\",\n  \"model\": \"marble-1.0\",\n  \"permission\": {\n    \"public\": false\n  },\n  \"seed\": 42,\n  \"tags\": [\n    \"fantasy\",\n    \"coastal\"\n  ],\n  \"world_prompt\": {\n    \"text_prompt\": \"A grand, ivy-covered castle rises from the shoreline at sunset, its reflection shimmering in the tranquil ocean waves.\",\n    \"type\": \"text\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"operation_id\": \"string\",\n  \"done\": true,\n  \"cost\": {\n    \"total_credits\": 4599,\n    \"line_items\": [\n      {\n        \"name\": \"string\",\n        \"credits\": 2059\n      },\n      {\n        \"name\": \"string\",\n        \"credits\": 1007\n      }\n    ]\n  },\n  \"created_at\": \"2014-01-04T06:44:01.301Z\",\n  \"error\": {\n    \"code\": 658,\n    \"message\": \"string\"\n  },\n  \"expires_at\": \"1993-08-24T03:47:53.599Z\",\n  \"metadata\": {\n    \"key_0\": true,\n    \"key_1\": 618.0570717041978\n  },\n  \"response\": {},\n  \"updated_at\": \"1990-05-18T07:27:17.662Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a49de87-1e6f-46c3-a5e7-34f42328d24f",
+              "name": "The account has insufficient API credits for this request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds:generate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"display_name\": \"Coastal Castle\",\n  \"model\": \"marble-1.0\",\n  \"permission\": {\n    \"public\": false\n  },\n  \"seed\": 42,\n  \"tags\": [\n    \"fantasy\",\n    \"coastal\"\n  ],\n  \"world_prompt\": {\n    \"text_prompt\": \"A grand, ivy-covered castle rises from the shoreline at sunset, its reflection shimmering in the tranquil ocean waves.\",\n    \"type\": \"text\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Insufficient API credits to start this request. Add credits or enable auto-refill at https://platform.worldlabs.ai/billing.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e650f49-534e-4ca3-a533-026f5fb3b840",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds:generate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"display_name\": \"Coastal Castle\",\n  \"model\": \"marble-1.0\",\n  \"permission\": {\n    \"public\": false\n  },\n  \"seed\": 42,\n  \"tags\": [\n    \"fantasy\",\n    \"coastal\"\n  ],\n  \"world_prompt\": {\n    \"text_prompt\": \"A grand, ivy-covered castle rises from the shoreline at sunset, its reflection shimmering in the tranquil ocean waves.\",\n    \"type\": \"text\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f571a9d8-14fe-407b-b017-358cca4b7641",
+          "name": "List Worlds",
+          "request": {
+            "name": "List Worlds",
+            "description": {
+              "content": "List worlds with optional filters.\n\nReturns worlds created through the API with optional filtering and pagination.\n\nArgs:\n    request: List request with optional filters:\n        - page_size: Number of results per page (default: 10)\n        - page_token: Pagination token from previous response\n        - status: Filter by status (e.g., \"COMPLETED\")\n        - model: Filter by model name (e.g., \"marble-1.0-plus\")\n        - tags: Filter by tags (matches worlds with any tag)\n        - is_public: Filter by visibility (true=public, false=private, null=all)\n        - created_after: Filter by creation time (after timestamp)\n        - created_before: Filter by creation time (before timestamp)\n        - sort_by: Sort order (\"created_at\" or \"updated_at\")\n\nReturns:\n    ListWorldsResponse with worlds list and next_page_token for pagination.\n\nRaises:\n    HTTPException: 400 if invalid parameters\n    HTTPException: 500 if request fails",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "marble",
+                "v1",
+                "worlds:list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"created_after\": \"<dateTime>\",\n  \"created_before\": \"<dateTime>\",\n  \"is_public\": \"<boolean>\",\n  \"model\": \"<string>\",\n  \"page_size\": 20,\n  \"page_token\": \"<string>\",\n  \"sort_by\": \"created_at\",\n  \"status\": \"<string>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "751ed863-a286-4648-b533-e51ca1c2cf36",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds:list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"model\": \"marble-1.0\",\n  \"page_size\": 20,\n  \"sort_by\": \"created_at\",\n  \"status\": \"SUCCEEDED\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"worlds\": [\n    {\n      \"world_id\": \"string\",\n      \"display_name\": \"string\",\n      \"world_marble_url\": \"string\",\n      \"assets\": {\n        \"caption\": \"string\",\n        \"imagery\": {\n          \"pano_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"mesh\": {\n          \"collider_mesh_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"full_res_mesh_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"hq_mesh_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"splats\": {\n          \"semantics_metadata\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"spz_urls\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"thumbnail_url\": \"string\"\n      },\n      \"created_at\": \"2024-04-06T00:23:49.672Z\",\n      \"model\": \"string\",\n      \"permission\": {\n        \"allow_id_access\": false,\n        \"allowed_readers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"allowed_writers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"public\": false\n      },\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"updated_at\": \"2000-12-20T08:55:43.250Z\",\n      \"world_prompt\": {\n        \"text_prompt\": \"string\",\n        \"type\": \"text\"\n      }\n    },\n    {\n      \"world_id\": \"string\",\n      \"display_name\": \"string\",\n      \"world_marble_url\": \"string\",\n      \"assets\": {\n        \"caption\": \"string\",\n        \"imagery\": {\n          \"pano_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"mesh\": {\n          \"collider_mesh_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"full_res_mesh_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"hq_mesh_url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"splats\": {\n          \"semantics_metadata\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"spz_urls\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"thumbnail_url\": \"string\"\n      },\n      \"created_at\": \"1975-07-15T23:37:46.203Z\",\n      \"model\": \"string\",\n      \"permission\": {\n        \"allow_id_access\": false,\n        \"allowed_readers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"allowed_writers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"public\": false\n      },\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"updated_at\": \"2019-08-04T12:17:06.913Z\",\n      \"world_prompt\": {\n        \"text_prompt\": \"string\",\n        \"type\": \"text\"\n      }\n    }\n  ],\n  \"next_page_token\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ef2b7ca-f314-4ae9-a356-67ddbc516ecf",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "marble",
+                    "v1",
+                    "worlds:list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "WLT-Api-Key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"model\": \"marble-1.0\",\n  \"page_size\": 20,\n  \"sort_by\": \"created_at\",\n  \"status\": \"SUCCEEDED\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.worldlabs.ai",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) ",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<string>",
+      "key": "world_id"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "WLT-Api-Key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "61000d45-e31d-43ae-aa4c-c1480fc15d01",
+    "name": "Public API v1 credits Marble API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public-facing API for the Marble platform",
+      "type": "text/plain"
+    }
+  }
+}

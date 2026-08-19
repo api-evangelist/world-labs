@@ -2,45 +2,48 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/world-labs-marble-openapi-original.yml
-description: >-
-  World Labs publishes no official MCP server as of this pass (none referenced
-  in docs.worldlabs.ai, the worldlabsai GitHub org, or the official
-  marble-developer-api-skill — the skill targets coding agents via OpenAPI
-  client generation instead). This is a CANDIDATE tool list derived one tool
-  per operation from the Marble Public API v1 OpenAPI. Auth would be the
-  WLT-Api-Key header.
+description: World Labs publishes no official MCP server as of this pass (none referenced in docs.worldlabs.ai,
+  the worldlabsai GitHub org, or the official marble-developer-api-skill — the skill targets coding agents
+  via OpenAPI client generation instead). This is a CANDIDATE tool list derived one tool per operation
+  from the Marble Public API v1 OpenAPI. Auth would be the WLT-Api-Key header.
 server:
   name: world-labs
   transport: http
   url: null
 tools:
-  - name: get_credits
-    description: Get remaining API credits for the authenticated user.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#get_credits_marble_v1_credits_get
-  - name: get_media_asset
-    description: Get a media asset by ID.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#get_media_asset_marble_v1_media_assets__media_asset_id__get
-  - name: prepare_media_asset_upload
-    description: Prepare a media asset upload (signed URL) for use in world generation.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#prepare_media_asset_upload_marble_v1_media_assets_prepare_upload_post
-  - name: get_operation
-    description: Poll a long-running operation by ID until done is true.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#get_operation_marble_v1_operations__operation_id__get
-  - name: pano_depth_to_rgb
-    description: Generate an RGB panorama from a depth panorama.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#pano_depth_to_rgb_marble_v1_pano_depth_to_rgb_post
-  - name: generate_world
-    description: Start a 3D world generation from text, image, pano, multi-image, or video input.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#generate_world_marble_v1_worlds_generate_post
-  - name: get_world
-    description: Get a world by ID, including splat/mesh/imagery assets and semantics metadata.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#get_world_marble_v1_worlds__world_id__get
-  - name: list_worlds
-    description: List worlds with optional filters and cursor pagination.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#list_worlds_marble_v1_worlds_list_post
-  - name: export_world
-    description: Export a generated world asset (PLY splats free; HQ mesh GLB billed).
-    source_operation: openapi/world-labs-marble-openapi-original.yml#export_world_marble_v1_worlds__world_id__export_post
-  - name: delete_world
-    description: Delete a world by ID.
-    source_operation: openapi/world-labs-marble-openapi-original.yml#delete_world_marble_v1_worlds__world_id__delete
+- name: get_credits
+  description: Get remaining API credits for the authenticated user.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#get_credits_marble_v1_credits_get
+- name: get_media_asset
+  description: Get a media asset by ID.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#get_media_asset_marble_v1_media_assets__media_asset_id__get
+- name: prepare_media_asset_upload
+  description: Prepare a media asset upload (signed URL) for use in world generation.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#prepare_media_asset_upload_marble_v1_media_assets_prepare_upload_post
+- name: get_operation
+  description: Poll a long-running operation by ID until done is true.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#get_operation_marble_v1_operations__operation_id__get
+- name: pano_depth_to_rgb
+  description: Generate an RGB panorama from a depth panorama.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#pano_depth_to_rgb_marble_v1_pano_depth_to_rgb_post
+- name: generate_world
+  description: Start a 3D world generation from text, image, pano, multi-image, or video input.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#generate_world_marble_v1_worlds_generate_post
+- name: get_world
+  description: Get a world by ID, including splat/mesh/imagery assets and semantics metadata.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#get_world_marble_v1_worlds__world_id__get
+- name: list_worlds
+  description: List worlds with optional filters and cursor pagination.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#list_worlds_marble_v1_worlds_list_post
+- name: export_world
+  description: Export a generated world asset (PLY splats free; HQ mesh GLB billed).
+  source_operation: openapi/world-labs-marble-openapi-original.yml#export_world_marble_v1_worlds__world_id__export_post
+- name: delete_world
+  description: Delete a world by ID.
+  source_operation: openapi/world-labs-marble-openapi-original.yml#delete_world_marble_v1_worlds__world_id__delete
+deployment:
+  mode: none
+  verified: derived
+  tools: 10
+  checked: '2026-08-12'
+  source: catalog MCP census

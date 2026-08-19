@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Marble Public API v1 credits API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "WLT-Api-Key",
+      "value": "{{WLT-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "credits",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Credits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.worldlabs.ai/marble/v1/credits"
+          },
+          "docs": "Get remaining API credits for the authenticated user.\n\nReturns:\n    CreditsResponse with the current aggregate API credit balance.\n\nRaises:\n    HTTPException: 404 if the caller is not an API-enabled user\n    HTTPException: 503 if the billing backend is unavailable"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

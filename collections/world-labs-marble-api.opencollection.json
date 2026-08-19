@@ -1,0 +1,180 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Public API v1 credits Marble API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "WLT-Api-Key",
+      "value": "{{WLT-Api-Key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Marble",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Media Asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.worldlabs.ai/marble/v1/media-assets/:media_asset_id",
+            "params": [
+              {
+                "name": "media_asset_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a media asset by ID.\n\nRetrieves metadata for a previously created media asset.\n\nArgs:\n    media_asset_id: The media asset identifier.\n\nReturns:\n    MediaAsset object with media_asset_id, file_name, extension, kind,\n    metadata, created_at, and updated_at.\n\nRaises:\n    HTTPException: 404 if not found"
+        },
+        {
+          "info": {
+            "name": "Prepare a media asset upload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.worldlabs.ai/marble/v1/media-assets:prepare_upload",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Prepare a media asset upload for use in world generation.\n\nThis API endpoint creates a media asset record and returns a signed upload URL.\nUse this workflow to upload images or videos that you want to reference in world\ngeneration requests.\n\n## Workflow\n\n1. **Prepare Upload** (this endpoint): Get a `media_asset_id` and `upload_url`\n2. **Upload File**: Use the signed URL to upload your file\n3. **Generate World**: Reference the `media_asset_id` in `/worlds:generate` with\n   source type \"media_asse"
+        },
+        {
+          "info": {
+            "name": "Get Operation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.worldlabs.ai/marble/v1/operations/:operation_id",
+            "params": [
+              {
+                "name": "operation_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get an operation by ID.\n\nPoll this endpoint to check the status of a long-running operation.\nWhen done=true, the response field contains the generated world.\n\nArgs:\n    operation_id: The operation identifier from /worlds:generate.\n\nReturns:\n    GetOperationResponse[World] with:\n        - operation_id: Operation identifier\n        - created_at: Creation timestamp\n        - updated_at: Last update timestamp\n        - expires_at: Expiration timestamp\n        - done: true when complete, false while "
+        },
+        {
+          "info": {
+            "name": "Pano Depth To Rgb",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.worldlabs.ai/marble/v1/pano:depth_to_rgb",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate an RGB panorama from a depth panorama.\n\nProvide a depth panorama and a text prompt\ndescribing the desired appearance. The depth map\nsupplies the scene geometry; the model synthesizes\ntextures that match that geometry and returns a\npanoramic RGB image.\n\nAccepted depth inputs:\n\n* **EXR**: float depth values. Omit\n  ``z_min`` and ``z_max``.\n* **PNG**: depth values normalized to [0, 1].\n  Provide both ``z_min`` and ``z_max`` so the\n  service can decode the PNG correctly.\n\nFor a complete PNG"
+        },
+        {
+          "info": {
+            "name": "Get World",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.worldlabs.ai/marble/v1/worlds/:world_id",
+            "params": [
+              {
+                "name": "world_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a world by ID.\n\nRetrieves a world's details including generated assets if available.\nOnly the world owner or users with access to public worlds can retrieve them.\n\nArgs:\n    world_id: The unique identifier of the world.\n\nReturns:\n    World object with world_id, display_name, tags, assets, created_at,\n    updated_at, permission, model, world_prompt, and world_marble_url.\n\nRaises:\n    HTTPException: 404 if world not found or access denied"
+        },
+        {
+          "info": {
+            "name": "Delete World",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.worldlabs.ai/marble/v1/worlds/:world_id",
+            "params": [
+              {
+                "name": "world_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a world by ID.\n\nPermanently deletes a world and its associated assets.\nOnly the world owner can delete a world.\n\nArgs:\n    world_id: The unique identifier of the world to delete.\n\nReturns:\n    DeleteWorldResponse confirming the deletion.\n\nRaises:\n    HTTPException: 403 if user is not the world owner\n    HTTPException: 404 if world not found\n    HTTPException: 500 if deletion fails"
+        },
+        {
+          "info": {
+            "name": "Export World",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.worldlabs.ai/marble/v1/worlds/:world_id:export",
+            "params": [
+              {
+                "name": "world_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Export a generated world asset.\n\nPLY splat exports are converted synchronously, cached in GCS, and returned\nas completed operations. HQ mesh exports reuse the existing async mesh\nexport service and return an in-progress operation."
+        },
+        {
+          "info": {
+            "name": "Generate World",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.worldlabs.ai/marble/v1/worlds:generate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Start world generation.\n\nCreates a new world generation job and returns a long-running operation.\nPoll the /operations/{operation_id} endpoint to check generation status\nand retrieve the generated world when complete.\n\nArgs:\n    request: The world generation request containing world_prompt, display_name,\n        tags, model, seed, and permission settings.\n\nReturns:\n    GenerateWorldResponse with operation_id and timestamps. Use the operation_id\n    to poll for completion.\n\nRaises:\n    HTTPExcept"
+        },
+        {
+          "info": {
+            "name": "List Worlds",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.worldlabs.ai/marble/v1/worlds:list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "List worlds with optional filters.\n\nReturns worlds created through the API with optional filtering and pagination.\n\nArgs:\n    request: List request with optional filters:\n        - page_size: Number of results per page (default: 10)\n        - page_token: Pagination token from previous response\n        - status: Filter by status (e.g., \"COMPLETED\")\n        - model: Filter by model name (e.g., \"marble-1.0-plus\")\n        - tags: Filter by tags (matches worlds with any tag)\n        - is_public: Filt"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
