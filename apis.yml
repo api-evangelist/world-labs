@@ -28,12 +28,17 @@ created: '2026-07-17'
 modified: '2026-07-17'
 tags:
 - Company
+- Artificial Intelligence
+tags_raw:
+- Company
 - Ai
 apis:
 - aid: world-labs:world-labs-credits-api
   name: World Labs credits API
   description: The credits API from World Labs — 1 operation(s) for credits.
   tags:
+  - Credits
+  tags_raw:
   - credits
   properties:
   - type: OpenAPI
