@@ -49,7 +49,7 @@ apis:
   name: World Labs credits API
   description: The credits API from World Labs — 1 operation(s) for credits.
   tags:
-  - Credits
+  - Credit
   tags_raw:
   - credits
   properties:
