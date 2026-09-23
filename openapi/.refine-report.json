@@ -1,16 +1,33 @@
 {
   "provider": "world-labs",
   "sources": [
-    "world-labs-credits-api-openapi.yml",
-    "world-labs-marble-api-openapi.yml"
+    "_original/world-labs-marble-openapi-original.yml"
   ],
   "outputs": [
-    "world-labs-credits-api-openapi.yml",
-    "world-labs-marble-api-openapi.yml"
+    "world-labs-marble-api-openapi.yml",
+    "world-labs-credits-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "world-labs-marble-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "world-labs-marble-openapi-original.yml: tagged paths GET /marble/v1/media-assets/{media_asset_id} -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths POST /marble/v1/media-assets:prepare_upload -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths GET /marble/v1/operations/{operation_id} -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths POST /marble/v1/pano:depth_to_rgb -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths DELETE /marble/v1/worlds/{world_id} -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths GET /marble/v1/worlds/{world_id} -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths POST /marble/v1/worlds/{world_id}:export -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths POST /marble/v1/worlds:generate -> Marble",
+    "world-labs-marble-openapi-original.yml: tagged paths POST /marble/v1/worlds:list -> Marble",
+    "world-labs-marble-openapi-original.yml: declared missing tag: Marble",
+    "world-labs-marble-openapi-original.yml: declared missing tag: credits",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "world-labs-credits-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "world-labs-marble-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

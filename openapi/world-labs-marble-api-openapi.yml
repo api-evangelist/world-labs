@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   description: Public-facing API for the Marble platform
   summary: Marble Public API v1
-  title: Public API v1 credits Marble API
+  title: Public API v1 Marble API
   version: 1.0.0
 servers:
 - description: World API
@@ -14,7 +14,27 @@ tags:
 paths:
   /marble/v1/media-assets/{media_asset_id}:
     get:
-      description: "Get a media asset by ID.\n\nRetrieves metadata for a previously created media asset.\n\nArgs:\n    media_asset_id: The media asset identifier.\n\nReturns:\n    MediaAsset object with media_asset_id, file_name, extension, kind,\n    metadata, created_at, and updated_at.\n\nRaises:\n    HTTPException: 404 if not found"
+      description: 'Get a media asset by ID.
+
+
+        Retrieves metadata for a previously created media asset.
+
+
+        Args:
+
+        media_asset_id: The media asset identifier.
+
+
+        Returns:
+
+        MediaAsset object with media_asset_id, file_name, extension, kind,
+
+        metadata, created_at, and updated_at.
+
+
+        Raises:
+
+        HTTPException: 404 if not found'
       operationId: get_media_asset_marble_v1_media_assets__media_asset_id__get
       parameters:
       - in: path
@@ -41,7 +61,110 @@ paths:
       - Marble
   /marble/v1/media-assets:prepare_upload:
     post:
-      description: "Prepare a media asset upload for use in world generation.\n\nThis API endpoint creates a media asset record and returns a signed upload URL.\nUse this workflow to upload images or videos that you want to reference in world\ngeneration requests.\n\n## Workflow\n\n1. **Prepare Upload** (this endpoint): Get a `media_asset_id` and `upload_url`\n2. **Upload File**: Use the signed URL to upload your file\n3. **Generate World**: Reference the `media_asset_id` in `/worlds:generate` with\n   source type \"media_asset\"\n\n## Request Parameters\n\n- `file_name`: Your file's name (e.g., \"landscape.jpg\")\n- `extension`: File extension without dot (e.g., \"jpg\", \"png\", \"mp4\")\n- `kind`: Either \"image\" or \"video\"\n- `metadata`: Optional custom metadata object\n\n## Response\n\nReturns a `MediaAssetPrepareUploadResponse` containing:\n\n- `media_asset`: Object with `media_asset_id` (use this in world generation)\n- `upload_info`: Object with `upload_url`, `required_headers`, and `curl_example`\n\n## Uploading Your File\n\nUse the returned `upload_url` and `required_headers` to upload your file:\n\n```bash\ncurl --request PUT \\\n  --url <upload_url> \\\n  --header \"Content-Type: <content-type>\" \\\n  --header \"<header-name>: <header-value>\" \\\n  --upload-file /path/to/your/file\n```\n\nReplace:\n- `<upload_url>`: The `upload_url` from the response\n- `<content-type>`: MIME type (e.g., `image/png`, `image/jpeg`, `video/mp4`)\n- `<header-name>: <header-value>`: Each header from `required_headers`\n- `/path/to/your/file`: Path to your local file\n\n## Example Usage in World Generation\n\nAfter uploading, use the `media_asset_id` in a world generation request:\n\n```json\n{\n  \"world_prompt\": {\n    \"type\": \"image\",\n    \"image_prompt\": {\n      \"source\": \"media_asset\",\n      \"media_asset_id\": \"<your-media-asset-id>\"\n    }\n  }\n}\n```"
+      description: 'Prepare a media asset upload for use in world generation.
+
+
+        This API endpoint creates a media asset record and returns a signed upload URL.
+
+        Use this workflow to upload images or videos that you want to reference in world
+
+        generation requests.
+
+
+        ## Workflow
+
+
+        1. **Prepare Upload** (this endpoint): Get a `media_asset_id` and `upload_url`
+
+        2. **Upload File**: Use the signed URL to upload your file
+
+        3. **Generate World**: Reference the `media_asset_id` in `/worlds:generate` with
+
+        source type "media_asset"
+
+
+        ## Request Parameters
+
+
+        - `file_name`: Your file''s name (e.g., "landscape.jpg")
+
+        - `extension`: File extension without dot (e.g., "jpg", "png", "mp4")
+
+        - `kind`: Either "image" or "video"
+
+        - `metadata`: Optional custom metadata object
+
+
+        ## Response
+
+
+        Returns a `MediaAssetPrepareUploadResponse` containing:
+
+
+        - `media_asset`: Object with `media_asset_id` (use this in world generation)
+
+        - `upload_info`: Object with `upload_url`, `required_headers`, and `curl_example`
+
+
+        ## Uploading Your File
+
+
+        Use the returned `upload_url` and `required_headers` to upload your file:
+
+
+        ```bash
+
+        curl --request PUT \
+
+        --url \
+
+        --header "Content-Type: " \
+
+        --header ": " \
+
+        --upload-file /path/to/your/file
+
+        ```
+
+
+        Replace:
+
+        - ``: The `upload_url` from the response
+
+        - ``: MIME type (e.g., `image/png`, `image/jpeg`, `video/mp4`)
+
+        - `: `: Each header from `required_headers`
+
+        - `/path/to/your/file`: Path to your local file
+
+
+        ## Example Usage in World Generation
+
+
+        After uploading, use the `media_asset_id` in a world generation request:
+
+
+        ```json
+
+        {
+
+        "world_prompt": {
+
+        "type": "image",
+
+        "image_prompt": {
+
+        "source": "media_asset",
+
+        "media_asset_id": ""
+
+        }
+
+        }
+
+        }
+
+        ```'
       operationId: prepare_media_asset_upload_marble_v1_media_assets_prepare_upload_post
       requestBody:
         content:
@@ -67,7 +190,55 @@ paths:
       - Marble
   /marble/v1/operations/{operation_id}:
     get:
-      description: "Get an operation by ID.\n\nPoll this endpoint to check the status of a long-running operation.\nWhen done=true, the response field contains the generated world.\n\nArgs:\n    operation_id: The operation identifier from /worlds:generate.\n\nReturns:\n    GetOperationResponse[World] with:\n        - operation_id: Operation identifier\n        - created_at: Creation timestamp\n        - updated_at: Last update timestamp\n        - expires_at: Expiration timestamp\n        - done: true when complete, false while in progress\n        - error: Error details if failed, null otherwise\n        - metadata: Progress information and world_id\n        - response: Generated World if done=true, null otherwise\n        - cost: Settled credit cost breakdown; populated only when the\n          operation completed successfully (done=true with no error)\n          and a public price is known for its operation type. Failed\n          or in-progress operations return null.\n\nRaises:\n    HTTPException: 401 if unauthorized\n    HTTPException: 404 if operation not found\n    HTTPException: 500 if request fails"
+      description: 'Get an operation by ID.
+
+
+        Poll this endpoint to check the status of a long-running operation.
+
+        When done=true, the response field contains the generated world.
+
+
+        Args:
+
+        operation_id: The operation identifier from /worlds:generate.
+
+
+        Returns:
+
+        GetOperationResponse[World] with:
+
+        - operation_id: Operation identifier
+
+        - created_at: Creation timestamp
+
+        - updated_at: Last update timestamp
+
+        - expires_at: Expiration timestamp
+
+        - done: true when complete, false while in progress
+
+        - error: Error details if failed, null otherwise
+
+        - metadata: Progress information and world_id
+
+        - response: Generated World if done=true, null otherwise
+
+        - cost: Settled credit cost breakdown; populated only when the
+
+        operation completed successfully (done=true with no error)
+
+        and a public price is known for its operation type. Failed
+
+        or in-progress operations return null.
+
+
+        Raises:
+
+        HTTPException: 401 if unauthorized
+
+        HTTPException: 404 if operation not found
+
+        HTTPException: 500 if request fails'
       operationId: get_operation_marble_v1_operations__operation_id__get
       parameters:
       - in: path
@@ -94,7 +265,55 @@ paths:
       - Marble
   /marble/v1/pano:depth_to_rgb:
     post:
-      description: "Generate an RGB panorama from a depth panorama.\n\nProvide a depth panorama and a text prompt\ndescribing the desired appearance. The depth map\nsupplies the scene geometry; the model synthesizes\ntextures that match that geometry and returns a\npanoramic RGB image.\n\nAccepted depth inputs:\n\n* **EXR**: float depth values. Omit\n  ``z_min`` and ``z_max``.\n* **PNG**: depth values normalized to [0, 1].\n  Provide both ``z_min`` and ``z_max`` so the\n  service can decode the PNG correctly.\n\nFor a complete PNG-based workflow, see the\n[web-chisel-depth-png example](https://github.com/worldlabsai/worldlabs-api-examples/tree/main/web-chisel-depth-png).\n\nReturns a long-running ``Operation``. Poll\n``GET /operations/{operation_id}`` until\n``done`` is ``true``, then read the generated\npanorama URL from ``response.pano_url``.\n\nRaises:\n    HTTPException: 400 if invalid request\n    HTTPException: 402 if insufficient credits\n    HTTPException: 500 if generation could not start"
+      description: 'Generate an RGB panorama from a depth panorama.
+
+
+        Provide a depth panorama and a text prompt
+
+        describing the desired appearance. The depth map
+
+        supplies the scene geometry; the model synthesizes
+
+        textures that match that geometry and returns a
+
+        panoramic RGB image.
+
+
+        Accepted depth inputs:
+
+
+        * **EXR**: float depth values. Omit
+
+        ``z_min`` and ``z_max``.
+
+        * **PNG**: depth values normalized to [0, 1].
+
+        Provide both ``z_min`` and ``z_max`` so the
+
+        service can decode the PNG correctly.
+
+
+        For a complete PNG-based workflow, see the
+
+        web-chisel-depth-png example.
+
+
+        Returns a long-running ``Operation``. Poll
+
+        ``GET /operations/{operation_id}`` until
+
+        ``done`` is ``true``, then read the generated
+
+        panorama URL from ``response.pano_url``.
+
+
+        Raises:
+
+        HTTPException: 400 if invalid request
+
+        HTTPException: 402 if insufficient credits
+
+        HTTPException: 500 if generation could not start'
       operationId: pano_depth_to_rgb_marble_v1_pano_depth_to_rgb_post
       requestBody:
         content:
@@ -126,7 +345,31 @@ paths:
       - Marble
   /marble/v1/worlds/{world_id}:
     delete:
-      description: "Delete a world by ID.\n\nPermanently deletes a world and its associated assets.\nOnly the world owner can delete a world.\n\nArgs:\n    world_id: The unique identifier of the world to delete.\n\nReturns:\n    DeleteWorldResponse confirming the deletion.\n\nRaises:\n    HTTPException: 403 if user is not the world owner\n    HTTPException: 404 if world not found\n    HTTPException: 500 if deletion fails"
+      description: 'Delete a world by ID.
+
+
+        Permanently deletes a world and its associated assets.
+
+        Only the world owner can delete a world.
+
+
+        Args:
+
+        world_id: The unique identifier of the world to delete.
+
+
+        Returns:
+
+        DeleteWorldResponse confirming the deletion.
+
+
+        Raises:
+
+        HTTPException: 403 if user is not the world owner
+
+        HTTPException: 404 if world not found
+
+        HTTPException: 500 if deletion fails'
       operationId: delete_world_marble_v1_worlds__world_id__delete
       parameters:
       - in: path
@@ -152,7 +395,29 @@ paths:
       tags:
       - Marble
     get:
-      description: "Get a world by ID.\n\nRetrieves a world's details including generated assets if available.\nOnly the world owner or users with access to public worlds can retrieve them.\n\nArgs:\n    world_id: The unique identifier of the world.\n\nReturns:\n    World object with world_id, display_name, tags, assets, created_at,\n    updated_at, permission, model, world_prompt, and world_marble_url.\n\nRaises:\n    HTTPException: 404 if world not found or access denied"
+      description: 'Get a world by ID.
+
+
+        Retrieves a world''s details including generated assets if available.
+
+        Only the world owner or users with access to public worlds can retrieve them.
+
+
+        Args:
+
+        world_id: The unique identifier of the world.
+
+
+        Returns:
+
+        World object with world_id, display_name, tags, assets, created_at,
+
+        updated_at, permission, model, world_prompt, and world_marble_url.
+
+
+        Raises:
+
+        HTTPException: 404 if world not found or access denied'
       operationId: get_world_marble_v1_worlds__world_id__get
       parameters:
       - in: path
@@ -225,7 +490,37 @@ paths:
       - Marble
   /marble/v1/worlds:generate:
     post:
-      description: "Start world generation.\n\nCreates a new world generation job and returns a long-running operation.\nPoll the /operations/{operation_id} endpoint to check generation status\nand retrieve the generated world when complete.\n\nArgs:\n    request: The world generation request containing world_prompt, display_name,\n        tags, model, seed, and permission settings.\n\nReturns:\n    GenerateWorldResponse with operation_id and timestamps. Use the operation_id\n    to poll for completion.\n\nRaises:\n    HTTPException: 400 if invalid request or content violates policies\n    HTTPException: 402 if insufficient credits\n    HTTPException: 500 if generation could not be started"
+      description: 'Start world generation.
+
+
+        Creates a new world generation job and returns a long-running operation.
+
+        Poll the /operations/{operation_id} endpoint to check generation status
+
+        and retrieve the generated world when complete.
+
+
+        Args:
+
+        request: The world generation request containing world_prompt, display_name,
+
+        tags, model, seed, and permission settings.
+
+
+        Returns:
+
+        GenerateWorldResponse with operation_id and timestamps. Use the operation_id
+
+        to poll for completion.
+
+
+        Raises:
+
+        HTTPException: 400 if invalid request or content violates policies
+
+        HTTPException: 402 if insufficient credits
+
+        HTTPException: 500 if generation could not be started'
       operationId: generate_world_marble_v1_worlds_generate_post
       requestBody:
         content:
@@ -257,7 +552,45 @@ paths:
       - Marble
   /marble/v1/worlds:list:
     post:
-      description: "List worlds with optional filters.\n\nReturns worlds created through the API with optional filtering and pagination.\n\nArgs:\n    request: List request with optional filters:\n        - page_size: Number of results per page (default: 10)\n        - page_token: Pagination token from previous response\n        - status: Filter by status (e.g., \"COMPLETED\")\n        - model: Filter by model name (e.g., \"marble-1.0-plus\")\n        - tags: Filter by tags (matches worlds with any tag)\n        - is_public: Filter by visibility (true=public, false=private, null=all)\n        - created_after: Filter by creation time (after timestamp)\n        - created_before: Filter by creation time (before timestamp)\n        - sort_by: Sort order (\"created_at\" or \"updated_at\")\n\nReturns:\n    ListWorldsResponse with worlds list and next_page_token for pagination.\n\nRaises:\n    HTTPException: 400 if invalid parameters\n    HTTPException: 500 if request fails"
+      description: 'List worlds with optional filters.
+
+
+        Returns worlds created through the API with optional filtering and pagination.
+
+
+        Args:
+
+        request: List request with optional filters:
+
+        - page_size: Number of results per page (default: 10)
+
+        - page_token: Pagination token from previous response
+
+        - status: Filter by status (e.g., "COMPLETED")
+
+        - model: Filter by model name (e.g., "marble-1.0-plus")
+
+        - tags: Filter by tags (matches worlds with any tag)
+
+        - is_public: Filter by visibility (true=public, false=private, null=all)
+
+        - created_after: Filter by creation time (after timestamp)
+
+        - created_before: Filter by creation time (before timestamp)
+
+        - sort_by: Sort order ("created_at" or "updated_at")
+
+
+        Returns:
+
+        ListWorldsResponse with worlds list and next_page_token for pagination.
+
+
+        Raises:
+
+        HTTPException: 400 if invalid parameters
+
+        HTTPException: 500 if request fails'
       operationId: list_worlds_marble_v1_worlds_list_post
       requestBody:
         content:
@@ -283,56 +616,306 @@ paths:
       - Marble
 components:
   schemas:
-    VideoPrompt-Output:
-      description: For world models supporting video (+ text) input.
+    HTTPValidationError:
       properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    OperationError:
+      description: Error information for a failed operation.
+      properties:
+        code:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Error code
+          title: Code
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message
+          title: Message
+      title: OperationError
+      type: object
+    DeleteWorldResponse:
+      description: Response from world deletion endpoint.
+      properties:
+        deleted:
+          description: Whether the world was successfully deleted
+          title: Deleted
+          type: boolean
+        world_id:
+          description: ID of the deleted world
+          title: World Id
+          type: string
+      required:
+      - world_id
+      - deleted
+      title: DeleteWorldResponse
+      type: object
+    MultiImagePrompt-Input:
+      description: 'Multi-image-to-world generation.
+
+
+        Generates a world from multiple images. text_prompt is optional.
+
+
+        Recommended image formats: jpg, jpeg, png, webp.'
+      properties:
+        disable_recaption:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If True, use text_prompt as-is without recaptioning
+          title: Disable Recaption
+        multi_image_prompt:
+          description: List of images with optional spherical locations
+          items:
+            $ref: '#/components/schemas/SphericallyLocatedContent-Input'
+          title: Multi Image Prompt
+          type: array
+        reconstruct_images:
+          default: false
+          description: Whether to use reconstruction mode (allows up to 8 images, otherwise 4)
+          title: Reconstruct Images
+          type: boolean
         text_prompt:
           anyOf:
           - type: string
           - type: 'null'
+          description: Optional text guidance (auto-generated if not provided)
           title: Text Prompt
         type:
-          const: video
-          default: video
+          const: multi-image
+          default: multi-image
           title: Type
           type: string
-        video_prompt:
-          $ref: '#/components/schemas/Content'
       required:
-      - video_prompt
-      title: VideoPrompt
+      - multi_image_prompt
+      title: MultiImagePrompt
       type: object
-    WorldAssets:
-      description: Downloadable outputs of world generation.
+    Operation_PanoDepthToRgbResult_:
       properties:
-        caption:
+        cost:
+          anyOf:
+          - $ref: '#/components/schemas/OperationCost'
+          - type: 'null'
+          description: Settled credit cost for the operation. Populated only on successful completion.
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        done:
+          description: True if the operation is completed
+          title: Done
+          type: boolean
+        error:
+          anyOf:
+          - $ref: '#/components/schemas/OperationError'
+          - type: 'null'
+          description: Error information if the operation failed
+        expires_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Expiration timestamp
+          title: Expires At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Service-specific metadata, such as progress percentage
+          title: Metadata
+        operation_id:
+          description: Operation identifier
+          title: Operation Id
+          type: string
+        response:
+          anyOf:
+          - $ref: '#/components/schemas/PanoDepthToRgbResult'
+          - type: 'null'
+          description: Result payload when done=true and no error. Structure depends on operation type.
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - operation_id
+      - done
+      title: Operation[PanoDepthToRgbResult]
+      type: object
+    ImagePrompt:
+      description: 'Image-to-world generation.
+
+
+        Generates a world from an image. text_prompt is optional - if not provided,
+
+        it will be generated via recaptioning.
+
+
+        Recommended image formats: jpg, jpeg, png, webp.'
+      properties:
+        disable_recaption:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If True, use text_prompt as-is without recaptioning
+          title: Disable Recaption
+        image_prompt:
+          description: Image content for world generation
+          discriminator:
+            mapping:
+              data_base64: '#/components/schemas/DataBase64Reference'
+              media_asset: '#/components/schemas/MediaAssetReference'
+              uri: '#/components/schemas/UriReference'
+            propertyName: source
+          oneOf:
+          - $ref: '#/components/schemas/MediaAssetReference'
+          - $ref: '#/components/schemas/UriReference'
+          - $ref: '#/components/schemas/DataBase64Reference'
+          title: Image Prompt
+        is_pano:
+          $ref: '#/components/schemas/PanoDetectionMode'
+          default: auto
+          description: How to treat the image input as a panorama. `auto` detects valid equirectangular panoramas, `true` always uses the image as a panorama, and `false` treats it as a standard image.
+        text_prompt:
           anyOf:
           - type: string
           - type: 'null'
-          description: AI-generated description of the world
-          title: Caption
-        imagery:
+          description: Optional text guidance (auto-generated if not provided)
+          title: Text Prompt
+        type:
+          const: image
+          default: image
+          title: Type
+          type: string
+      required:
+      - image_prompt
+      title: ImagePrompt
+      type: object
+    SphericallyLocatedContent-Output:
+      description: Content with a preferred location on the sphere.
+      properties:
+        azimuth:
           anyOf:
-          - $ref: '#/components/schemas/ImageryAssets'
+          - type: number
           - type: 'null'
-          description: Imagery assets
-        mesh:
-          anyOf:
-          - $ref: '#/components/schemas/MeshAssets'
-          - type: 'null'
-          description: Mesh assets
-        splats:
-          anyOf:
-          - $ref: '#/components/schemas/SplatAssets'
-          - type: 'null'
-          description: Gaussian splat assets
-        thumbnail_url:
+          title: Azimuth
+        data_base64:
           anyOf:
           - type: string
           - type: 'null'
-          description: Thumbnail URL for the world
-          title: Thumbnail Url
-      title: WorldAssets
+          title: Data Base64
+        extension:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File extension without dot
+          examples:
+          - jpg
+          - png
+          - pdf
+          - txt
+          title: Extension
+        uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Uri
+      title: SphericallyLocatedContent
+      type: object
+    World:
+      description: A generated world, including asset URLs.
+      properties:
+        assets:
+          anyOf:
+          - $ref: '#/components/schemas/WorldAssets'
+          - type: 'null'
+          description: Generated world assets
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        display_name:
+          description: Display name
+          title: Display Name
+          type: string
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Model used for generation
+          title: Model
+        permission:
+          anyOf:
+          - $ref: '#/components/schemas/Permission'
+          - type: 'null'
+          description: Access control permissions for the world
+        tags:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: Tags associated with the world
+          title: Tags
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+        world_id:
+          description: World identifier
+          title: World Id
+          type: string
+        world_marble_url:
+          description: World Marble URL
+          title: World Marble Url
+          type: string
+        world_prompt:
+          anyOf:
+          - discriminator:
+              mapping:
+                depth-pano: '#/components/schemas/DepthPanoPrompt'
+                image: '#/components/schemas/Prompt'
+                inpaint-pano: '#/components/schemas/InpaintPanoPrompt'
+                multi-image: '#/components/schemas/MultiImagePrompt-Output'
+                text: '#/components/schemas/WorldTextPrompt-Output'
+                video: '#/components/schemas/VideoPrompt-Output'
+              propertyName: type
+            oneOf:
+            - $ref: '#/components/schemas/WorldTextPrompt-Output'
+            - $ref: '#/components/schemas/Prompt'
+            - $ref: '#/components/schemas/MultiImagePrompt-Output'
+            - $ref: '#/components/schemas/VideoPrompt-Output'
+            - $ref: '#/components/schemas/DepthPanoPrompt'
+            - $ref: '#/components/schemas/InpaintPanoPrompt'
+          - type: 'null'
+          description: World prompt
+          title: World Prompt
+      required:
+      - world_id
+      - display_name
+      - world_marble_url
+      title: World
       type: object
     ExportWorldResult:
       description: Downloadable exported world asset.
@@ -376,269 +959,6 @@ components:
       - url
       title: ExportWorldResult
       type: object
-    ListWorldsResponse:
-      description: Response containing a list of API-generated worlds.
-      properties:
-        next_page_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Token for fetching the next page of results
-          title: Next Page Token
-        worlds:
-          description: List of worlds
-          items:
-            $ref: '#/components/schemas/World'
-          title: Worlds
-          type: array
-      required:
-      - worlds
-      title: ListWorldsResponse
-      type: object
-    Prompt:
-      description: 'For world models generating a world from a single image (+ text).
-
-        Images can be generated using the :image-generation method.
-
-        If no text prompt is provided, it will be generated via recaption.'
-      properties:
-        image_prompt:
-          $ref: '#/components/schemas/Content'
-        is_pano:
-          default: false
-          title: Is Pano
-          type: boolean
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Text Prompt
-        type:
-          const: image
-          default: image
-          title: Type
-          type: string
-      required:
-      - image_prompt
-      title: Prompt
-      type: object
-    MediaAsset:
-      description: 'A user-uploaded media asset stored in managed storage.
-
-
-        MediaAssets can be images, videos, or binary blobs that are used
-
-        as input to world generation.'
-      properties:
-        created_at:
-          description: Creation timestamp
-          format: date-time
-          title: Created At
-          type: string
-        extension:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: File extension without dot
-          examples:
-          - mp4
-          - png
-          - jpg
-          title: Extension
-        file_name:
-          description: File name
-          title: File Name
-          type: string
-        kind:
-          $ref: '#/components/schemas/MediaAssetKind'
-          description: High-level media type
-          examples:
-          - image
-          - video
-        media_asset_id:
-          description: Server-generated media asset identifier
-          title: Media Asset Id
-          type: string
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Optional application-specific metadata
-          title: Metadata
-        updated_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Last update timestamp
-          title: Updated At
-      required:
-      - media_asset_id
-      - file_name
-      - kind
-      - created_at
-      title: MediaAsset
-      type: object
-    ExportWorldResponse:
-      description: Response from world export endpoint.
-      properties:
-        cost:
-          anyOf:
-          - $ref: '#/components/schemas/OperationCost'
-          - type: 'null'
-          description: Settled credit cost for the operation. Populated only on successful completion.
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp
-          title: Created At
-        done:
-          description: True if the operation is completed
-          title: Done
-          type: boolean
-        error:
-          anyOf:
-          - $ref: '#/components/schemas/OperationError'
-          - type: 'null'
-          description: Error information if the operation failed
-        expires_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Expiration timestamp
-          title: Expires At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Service-specific metadata, such as progress percentage
-          title: Metadata
-        operation_id:
-          description: Operation identifier
-          title: Operation Id
-          type: string
-        response:
-          anyOf:
-          - $ref: '#/components/schemas/ExportWorldResult'
-          - type: 'null'
-          description: Result payload when done=true and no error. Structure depends on operation type.
-        updated_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Last update timestamp
-          title: Updated At
-      required:
-      - operation_id
-      - done
-      title: ExportWorldResponse
-      type: object
-    SplatAssets:
-      description: Gaussian splat asset URLs.
-      properties:
-        semantics_metadata:
-          anyOf:
-          - $ref: '#/components/schemas/WorldSemanticsMetadata'
-          - type: 'null'
-          description: Semantic metadata for the world
-        spz_urls:
-          anyOf:
-          - additionalProperties:
-              type: string
-            type: object
-          - type: 'null'
-          description: URLs for SPZ format Gaussian splat files
-          title: Spz Urls
-      title: SplatAssets
-      type: object
-    WorldTextPrompt-Output:
-      description: Input prompt class for text-conditioned world generation.
-      properties:
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Text Prompt
-        type:
-          const: text
-          default: text
-          title: Type
-          type: string
-      title: WorldTextPrompt
-      type: object
-    PanoDepthToRgbRequest:
-      description: "Request to generate an RGB panorama from a depth panorama.\n\nProvide a depth panorama and a text prompt describing\nthe desired appearance. The depth map supplies the\nscene geometry; the model synthesizes textures that\nloosely adhere to that geometry and returns a panoramic RGB image.\n\nAccepted depth inputs:\n\n* **EXR**: float depth values. Omit ``z_min``\n  and ``z_max``.\n* **PNG**: depth values normalized to [0, 1].\n  Provide both ``z_min`` and ``z_max`` so the service\n  can decode the PNG correctly.\n\nFor a complete PNG-based workflow, see the\n`web-chisel-depth-png example <https://github.com/worldlabsai/worldlabs-api-examples/tree/main/web-chisel-depth-png>`.\n\nThis endpoint returns a long-running ``Operation``.\nPoll ``GET /operations/{operation_id}`` until\n``done`` is ``true``, then read the generated\npanorama URL from ``response.pano_url``."
-      examples:
-      - depth_pano_image:
-          source: uri
-          uri: https://example.com/depth.exr
-        text_prompt: The scene is a warm, rustic cabin interior with a realistic style and a cozy winter atmosphere. Wooden walls and exposed beams frame the room, while a stone fireplace casts soft amber light across simple furnishings and natural textures. The 360 scene is faultless.
-      - depth_pano_image:
-          source: uri
-          uri: https://example.com/greenhouse-depth.exr
-        text_prompt: A peaceful greenhouse workshop filled with plants and glassware, with soft sunlight, weathered wood, and ivy creeping along the walls.
-      - depth_pano_image:
-          source: uri
-          uri: https://example.com/depth.png
-        text_prompt: The scene is a warm Mediterranean kitchen rendered in a realistic style with a bright, welcoming coastal atmosphere. The overall tone is relaxed and sunlit, combining natural materials with crisp handcrafted details. Blue ceramic tiles wrap the backsplash and continue across key architectural surfaces, giving the room a cool accent against creamy plaster walls. Wooden cabinetry lines the perimeter in a balanced arrangement, with paneled doors, open shelving, and brass hardware contributing to the room's refined but lived-in character. A broad countertop of pale stone runs between the cabinets, creating a continuous work surface that anchors the cooking area. A central table with a solid wood top occupies the middle of the room, surrounded by simple chairs and small ceramic vessels that reinforce the artisanal style. Arched openings connect the kitchen to adjacent areas, while French doors admit generous daylight and suggest an outdoor terrace nearby. Terracotta accents, woven textures, and neatly arranged cookware add visual richness without cluttering the space. The cabinetry, tiled surfaces, and stone counters form a coherent ring around the room, while the table remains the central focal element within the composition. The 360 scene is faultless.
-        z_max: 100
-        z_min: 0.1
-      properties:
-        depth_pano_image:
-          description: Depth panorama image (EXR or PNG). Provide via URI, media_asset, or base64 (max 100 MB).
-          discriminator:
-            mapping:
-              data_base64: '#/components/schemas/DataBase64Reference'
-              media_asset: '#/components/schemas/MediaAssetReference'
-              uri: '#/components/schemas/UriReference'
-            propertyName: source
-          oneOf:
-          - $ref: '#/components/schemas/MediaAssetReference'
-          - $ref: '#/components/schemas/UriReference'
-          - $ref: '#/components/schemas/DataBase64Reference'
-          title: Depth Pano Image
-        seed:
-          anyOf:
-          - maximum: 4294967295
-            minimum: 0
-            type: integer
-          - type: 'null'
-          description: Random seed for reproducible generation.
-          title: Seed
-        text_prompt:
-          description: Text description of the desired appearance.
-          title: Text Prompt
-          type: string
-        z_max:
-          anyOf:
-          - exclusiveMinimum: 0
-            type: number
-          - type: 'null'
-          description: Maximum depth. Required for PNG depth maps (normalized to [0, 1]). Must be provided together with z_min and must be greater than z_min. Omit for EXR depth maps.
-          title: Z Max
-        z_min:
-          anyOf:
-          - exclusiveMinimum: 0
-            type: number
-          - type: 'null'
-          description: Minimum depth. Required for PNG depth maps (normalized to [0, 1]). Must be provided together with z_max. Omit for EXR depth maps.
-          title: Z Min
-      required:
-      - depth_pano_image
-      - text_prompt
-      title: PanoDepthToRgbRequest
-      type: object
-    PanoDetectionMode:
-      enum:
-      - auto
-      - true
-      - false
     MeshAssets:
       description: Mesh asset URLs.
       properties:
@@ -662,477 +982,22 @@ components:
           title: Hq Mesh Url
       title: MeshAssets
       type: object
-    GenerateWorldResponse:
-      description: Response from world generation endpoint.
+    MediaAssetReference:
+      description: Reference to a previously uploaded MediaAsset.
       properties:
-        cost:
-          anyOf:
-          - $ref: '#/components/schemas/OperationCost'
-          - type: 'null'
-          description: Settled credit cost for the operation. Populated only on successful completion.
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp
-          title: Created At
-        done:
-          description: True if the operation is completed
-          title: Done
-          type: boolean
-        error:
-          anyOf:
-          - $ref: '#/components/schemas/OperationError'
-          - type: 'null'
-          description: Error information if the operation failed
-        expires_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Expiration timestamp
-          title: Expires At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Service-specific metadata, such as progress percentage
-          title: Metadata
-        operation_id:
-          description: Operation identifier
-          title: Operation Id
+        media_asset_id:
+          description: ID of a MediaAsset resource previously created and marked READY
+          title: Media Asset Id
           type: string
-        response:
-          anyOf:
-          - {}
-          - type: 'null'
-          description: Result payload when done=true and no error. Structure depends on operation type.
-          title: Response
-        updated_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Last update timestamp
-          title: Updated At
-      required:
-      - operation_id
-      - done
-      title: GenerateWorldResponse
-      type: object
-    WorldTextPrompt-Input:
-      description: 'Text-to-world generation.
-
-
-        Generates a world from a text description. text_prompt is REQUIRED.'
-      properties:
-        disable_recaption:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: If True, use text_prompt as-is without recaptioning
-          title: Disable Recaption
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional text guidance (auto-generated if not provided)
-          title: Text Prompt
-        type:
-          const: text
-          default: text
-          title: Type
-          type: string
-      title: WorldTextPrompt
-      type: object
-    MultiImagePrompt-Output:
-      description: For world models supporting multi-image (+ text) input.
-      properties:
-        multi_image_prompt:
-          items:
-            $ref: '#/components/schemas/SphericallyLocatedContent-Output'
-          title: Multi Image Prompt
-          type: array
-        reconstruct_images:
-          default: false
-          title: Reconstruct Images
-          type: boolean
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Text Prompt
-        type:
-          const: multi-image
-          default: multi-image
-          title: Type
-          type: string
-      required:
-      - multi_image_prompt
-      title: MultiImagePrompt
-      type: object
-    Permission:
-      description: Access control permissions for a resource.
-      properties:
-        allow_id_access:
-          default: false
-          title: Allow Id Access
-          type: boolean
-        allowed_readers:
-          items:
-            type: string
-          title: Allowed Readers
-          type: array
-        allowed_writers:
-          items:
-            type: string
-          title: Allowed Writers
-          type: array
-        public:
-          default: false
-          title: Public
-          type: boolean
-      title: Permission
-      type: object
-    SphericallyLocatedContent-Input:
-      description: Content with a preferred location on the sphere.
-      properties:
-        azimuth:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Azimuth angle in degrees
-          title: Azimuth
-        content:
-          description: The content at this location
-          discriminator:
-            mapping:
-              data_base64: '#/components/schemas/DataBase64Reference'
-              media_asset: '#/components/schemas/MediaAssetReference'
-              uri: '#/components/schemas/UriReference'
-            propertyName: source
-          oneOf:
-          - $ref: '#/components/schemas/MediaAssetReference'
-          - $ref: '#/components/schemas/UriReference'
-          - $ref: '#/components/schemas/DataBase64Reference'
-          title: Content
-      required:
-      - content
-      title: SphericallyLocatedContent
-      type: object
-    OperationCost:
-      description: Settled credit cost for a successful operation.
-      properties:
-        line_items:
-          description: Usage events that make up the operation's total credits
-          items:
-            $ref: '#/components/schemas/OperationCostLineItem'
-          title: Line Items
-          type: array
-        total_credits:
-          description: Total credits charged for the operation
-          title: Total Credits
-          type: integer
-      required:
-      - total_credits
-      title: OperationCost
-      type: object
-    VideoPrompt-Input:
-      description: 'Video-to-world generation.
-
-
-        Generates a world from a video. text_prompt is optional.
-
-
-        Recommended video formats: mp4, webm, mov, avi.
-
-        Maximum video size: 100MB.'
-      properties:
-        disable_recaption:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: If True, use text_prompt as-is without recaptioning
-          title: Disable Recaption
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional text guidance (auto-generated if not provided)
-          title: Text Prompt
-        type:
-          const: video
-          default: video
-          title: Type
-          type: string
-        video_prompt:
-          description: Video content for world generation
-          discriminator:
-            mapping:
-              data_base64: '#/components/schemas/DataBase64Reference'
-              media_asset: '#/components/schemas/MediaAssetReference'
-              uri: '#/components/schemas/UriReference'
-            propertyName: source
-          oneOf:
-          - $ref: '#/components/schemas/MediaAssetReference'
-          - $ref: '#/components/schemas/UriReference'
-          - $ref: '#/components/schemas/DataBase64Reference'
-          title: Video Prompt
-      required:
-      - video_prompt
-      title: VideoPrompt
-      type: object
-    PanoDepthToRgbResult:
-      description: 'Result from depth-to-RGB panorama generation.
-
-
-        Returned inside ``Operation.response`` when the
-
-        operation completes successfully (``done=true``).'
-      properties:
-        pano_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: URL of the generated RGB panorama image. Available when the operation succeeds.
-          title: Pano Url
-      title: PanoDepthToRgbResult
-      type: object
-    ImageryAssets:
-      description: Imagery asset URLs.
-      properties:
-        pano_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Panorama image URL
-          title: Pano Url
-      title: ImageryAssets
-      type: object
-    MultiImagePrompt-Input:
-      description: 'Multi-image-to-world generation.
-
-
-        Generates a world from multiple images. text_prompt is optional.
-
-
-        Recommended image formats: jpg, jpeg, png, webp.'
-      properties:
-        disable_recaption:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: If True, use text_prompt as-is without recaptioning
-          title: Disable Recaption
-        multi_image_prompt:
-          description: List of images with optional spherical locations
-          items:
-            $ref: '#/components/schemas/SphericallyLocatedContent-Input'
-          title: Multi Image Prompt
-          type: array
-        reconstruct_images:
-          default: false
-          description: Whether to use reconstruction mode (allows up to 8 images, otherwise 4)
-          title: Reconstruct Images
-          type: boolean
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional text guidance (auto-generated if not provided)
-          title: Text Prompt
-        type:
-          const: multi-image
-          default: multi-image
-          title: Type
-          type: string
-      required:
-      - multi_image_prompt
-      title: MultiImagePrompt
-      type: object
-    UriReference:
-      description: Reference to content via a publicly accessible URL.
-      properties:
         source:
-          const: uri
-          default: uri
+          const: media_asset
+          default: media_asset
           title: Source
           type: string
-        uri:
-          description: Publicly accessible URL pointing to the media
-          title: Uri
-          type: string
       required:
-      - uri
-      title: UriReference
+      - media_asset_id
+      title: MediaAssetReference
       type: object
-    MediaAssetPrepareUploadRequest:
-      description: Request to prepare a media asset upload.
-      properties:
-        extension:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: File extension without dot
-          examples:
-          - mp4
-          - png
-          - jpg
-          title: Extension
-        file_name:
-          description: File name
-          maxLength: 64
-          title: File Name
-          type: string
-        kind:
-          $ref: '#/components/schemas/MediaAssetKind'
-          description: High-level media type
-          examples:
-          - image
-          - video
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Optional application-specific metadata
-          title: Metadata
-      required:
-      - file_name
-      - kind
-      title: MediaAssetPrepareUploadRequest
-      type: object
-    SphericallyLocatedContent-Output:
-      description: Content with a preferred location on the sphere.
-      properties:
-        azimuth:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Azimuth
-        data_base64:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Data Base64
-        extension:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: File extension without dot
-          examples:
-          - jpg
-          - png
-          - pdf
-          - txt
-          title: Extension
-        uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Uri
-      title: SphericallyLocatedContent
-      type: object
-    GetOperationResponse_Union_World__PanoDepthToRgbResult__ExportWorldResult__:
-      properties:
-        cost:
-          anyOf:
-          - $ref: '#/components/schemas/OperationCost'
-          - type: 'null'
-          description: Settled credit cost for the operation. Populated only on successful completion.
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp
-          title: Created At
-        done:
-          description: True if the operation is completed
-          title: Done
-          type: boolean
-        error:
-          anyOf:
-          - $ref: '#/components/schemas/OperationError'
-          - type: 'null'
-          description: Error information if the operation failed
-        expires_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Expiration timestamp
-          title: Expires At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Service-specific metadata, such as progress percentage
-          title: Metadata
-        operation_id:
-          description: Operation identifier
-          title: Operation Id
-          type: string
-        response:
-          anyOf:
-          - $ref: '#/components/schemas/World'
-          - $ref: '#/components/schemas/PanoDepthToRgbResult'
-          - $ref: '#/components/schemas/ExportWorldResult'
-          - type: 'null'
-          description: Result payload when done=true and no error. Structure depends on operation type.
-          title: Response
-        updated_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Last update timestamp
-          title: Updated At
-      required:
-      - operation_id
-      - done
-      title: GetOperationResponse[Union[World, PanoDepthToRgbResult, ExportWorldResult]]
-      type: object
-    OperationCostLineItem:
-      description: A single usage event contributing to an operation's total credits.
-      properties:
-        credits:
-          description: Credits charged for this usage event
-          title: Credits
-          type: integer
-        name:
-          description: Human-readable usage event name
-          title: Name
-          type: string
-      required:
-      - name
-      - credits
-      title: OperationCostLineItem
-      type: object
-    MediaAssetPrepareUploadResponse:
-      description: Response from preparing a media asset upload.
-      properties:
-        media_asset:
-          $ref: '#/components/schemas/MediaAsset'
-          description: The created media asset
-        upload_info:
-          $ref: '#/components/schemas/UploadUrlInfo'
-          description: Upload URL information
-      required:
-      - media_asset
-      - upload_info
-      title: MediaAssetPrepareUploadResponse
-      type: object
-    MediaAssetKind:
-      description: High-level media asset type.
-      enum:
-      - image
-      - video
-      title: MediaAssetKind
-      type: string
     Content:
       description: 'Represents content (media, text, images) that can be stored inline or via URL.
 
@@ -1162,48 +1027,32 @@ components:
           title: Uri
       title: Content
       type: object
-    ValidationError:
+    Prompt:
+      description: 'For world models generating a world from a single image (+ text).
+
+        Images can be generated using the :image-generation method.
+
+        If no text prompt is provided, it will be generated via recaption.'
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    DataBase64Reference:
-      description: Reference to content via base64-encoded data.
-      properties:
-        data_base64:
-          description: Base64-encoded content data
-          title: Data Base64
-          type: string
-        extension:
+        image_prompt:
+          $ref: '#/components/schemas/Content'
+        is_pano:
+          default: false
+          title: Is Pano
+          type: boolean
+        text_prompt:
           anyOf:
           - type: string
           - type: 'null'
-          description: File extension without dot (e.g., 'jpg', 'png')
-          title: Extension
-        source:
-          const: data_base64
-          default: data_base64
-          title: Source
+          title: Text Prompt
+        type:
+          const: image
+          default: image
+          title: Type
           type: string
       required:
-      - data_base64
-      title: DataBase64Reference
+      - image_prompt
+      title: Prompt
       type: object
     WorldsGenerateRequest:
       description: Request to generate a world from text, image, multi-image, or video input.
@@ -1323,32 +1172,44 @@ components:
       - world_prompt
       title: WorldsGenerateRequest
       type: object
-    MediaAssetReference:
-      description: Reference to a previously uploaded MediaAsset.
+    InpaintPanoPrompt:
+      description: For models that inpaint the masked portion of a pano image.
       properties:
-        media_asset_id:
-          description: ID of a MediaAsset resource previously created and marked READY
-          title: Media Asset Id
-          type: string
-        source:
-          const: media_asset
-          default: media_asset
-          title: Source
+        pano_image:
+          $ref: '#/components/schemas/Content'
+        pano_mask:
+          $ref: '#/components/schemas/Content'
+        text_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text Prompt
+        type:
+          const: inpaint-pano
+          default: inpaint-pano
+          title: Type
           type: string
       required:
-      - media_asset_id
-      title: MediaAssetReference
+      - pano_image
+      - pano_mask
+      title: InpaintPanoPrompt
       type: object
-    HTTPValidationError:
+    WorldTextPrompt-Output:
+      description: Input prompt class for text-conditioned world generation.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        text_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text Prompt
+        type:
+          const: text
+          default: text
+          title: Type
+          type: string
+      title: WorldTextPrompt
       type: object
-    Operation_PanoDepthToRgbResult_:
+    GetOperationResponse_Union_World__PanoDepthToRgbResult__ExportWorldResult__:
       properties:
         cost:
           anyOf:
@@ -1391,9 +1252,12 @@ components:
           type: string
         response:
           anyOf:
+          - $ref: '#/components/schemas/World'
           - $ref: '#/components/schemas/PanoDepthToRgbResult'
+          - $ref: '#/components/schemas/ExportWorldResult'
           - type: 'null'
           description: Result payload when done=true and no error. Structure depends on operation type.
+          title: Response
         updated_at:
           anyOf:
           - format: date-time
@@ -1404,24 +1268,204 @@ components:
       required:
       - operation_id
       - done
-      title: Operation[PanoDepthToRgbResult]
+      title: GetOperationResponse[Union[World, PanoDepthToRgbResult, ExportWorldResult]]
       type: object
-    OperationError:
-      description: Error information for a failed operation.
+    GenerateWorldResponse:
+      description: Response from world generation endpoint.
       properties:
-        code:
+        cost:
           anyOf:
-          - type: integer
+          - $ref: '#/components/schemas/OperationCost'
           - type: 'null'
-          description: Error code
-          title: Code
-        message:
+          description: Settled credit cost for the operation. Populated only on successful completion.
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        done:
+          description: True if the operation is completed
+          title: Done
+          type: boolean
+        error:
+          anyOf:
+          - $ref: '#/components/schemas/OperationError'
+          - type: 'null'
+          description: Error information if the operation failed
+        expires_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Expiration timestamp
+          title: Expires At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Service-specific metadata, such as progress percentage
+          title: Metadata
+        operation_id:
+          description: Operation identifier
+          title: Operation Id
+          type: string
+        response:
+          anyOf:
+          - {}
+          - type: 'null'
+          description: Result payload when done=true and no error. Structure depends on operation type.
+          title: Response
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - operation_id
+      - done
+      title: GenerateWorldResponse
+      type: object
+    MediaAssetPrepareUploadResponse:
+      description: Response from preparing a media asset upload.
+      properties:
+        media_asset:
+          $ref: '#/components/schemas/MediaAsset'
+          description: The created media asset
+        upload_info:
+          $ref: '#/components/schemas/UploadUrlInfo'
+          description: Upload URL information
+      required:
+      - media_asset
+      - upload_info
+      title: MediaAssetPrepareUploadResponse
+      type: object
+    PanoDepthToRgbResult:
+      description: 'Result from depth-to-RGB panorama generation.
+
+
+        Returned inside ``Operation.response`` when the
+
+        operation completes successfully (``done=true``).'
+      properties:
+        pano_url:
           anyOf:
           - type: string
           - type: 'null'
-          description: Error message
+          description: URL of the generated RGB panorama image. Available when the operation succeeds.
+          title: Pano Url
+      title: PanoDepthToRgbResult
+      type: object
+    MediaAssetPrepareUploadRequest:
+      description: Request to prepare a media asset upload.
+      properties:
+        extension:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File extension without dot
+          examples:
+          - mp4
+          - png
+          - jpg
+          title: Extension
+        file_name:
+          description: File name
+          maxLength: 64
+          title: File Name
+          type: string
+        kind:
+          $ref: '#/components/schemas/MediaAssetKind'
+          description: High-level media type
+          examples:
+          - image
+          - video
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Optional application-specific metadata
+          title: Metadata
+      required:
+      - file_name
+      - kind
+      title: MediaAssetPrepareUploadRequest
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
           title: Message
-      title: OperationError
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SplatAssets:
+      description: Gaussian splat asset URLs.
+      properties:
+        semantics_metadata:
+          anyOf:
+          - $ref: '#/components/schemas/WorldSemanticsMetadata'
+          - type: 'null'
+          description: Semantic metadata for the world
+        spz_urls:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          description: URLs for SPZ format Gaussian splat files
+          title: Spz Urls
+      title: SplatAssets
+      type: object
+    WorldAssets:
+      description: Downloadable outputs of world generation.
+      properties:
+        caption:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: AI-generated description of the world
+          title: Caption
+        imagery:
+          anyOf:
+          - $ref: '#/components/schemas/ImageryAssets'
+          - type: 'null'
+          description: Imagery assets
+        mesh:
+          anyOf:
+          - $ref: '#/components/schemas/MeshAssets'
+          - type: 'null'
+          description: Mesh assets
+        splats:
+          anyOf:
+          - $ref: '#/components/schemas/SplatAssets'
+          - type: 'null'
+          description: Gaussian splat assets
+        thumbnail_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Thumbnail URL for the world
+          title: Thumbnail Url
+      title: WorldAssets
       type: object
     WorldSemanticsMetadata:
       description: "Semantic metadata describing how to interpret the generated splat\nasset in real-world units.\n\nThe exported asset is in arbitrary model units. Apply the transform\nbelow to convert to a metric, ground-aligned frame:\n\n    metric_xyz = raw_xyz * metric_scale_factor\n    aligned_xyz = metric_xyz - (0, ground_plane_offset, 0)\n\nBoth fields are populated on every world generated by the current\npipeline. They remain Optional only for backwards compatibility with\nworlds generated before December 2025, which predate metric-scale\nestimation.\n\nTODO: once pre-December-2025 worlds are migrated or aged out, tighten\nthese fields to non-Optional and drop the `| None` from the type."
@@ -1440,213 +1484,26 @@ components:
           title: Metric Scale Factor
       title: WorldSemanticsMetadata
       type: object
-    DeleteWorldResponse:
-      description: Response from world deletion endpoint.
+    PanoDepthToRgbRequest:
+      description: "Request to generate an RGB panorama from a depth panorama.\n\nProvide a depth panorama and a text prompt describing\nthe desired appearance. The depth map supplies the\nscene geometry; the model synthesizes textures that\nloosely adhere to that geometry and returns a panoramic RGB image.\n\nAccepted depth inputs:\n\n* **EXR**: float depth values. Omit ``z_min``\n  and ``z_max``.\n* **PNG**: depth values normalized to [0, 1].\n  Provide both ``z_min`` and ``z_max`` so the service\n  can decode the PNG correctly.\n\nFor a complete PNG-based workflow, see the\n`web-chisel-depth-png example <https://github.com/worldlabsai/worldlabs-api-examples/tree/main/web-chisel-depth-png>`.\n\nThis endpoint returns a long-running ``Operation``.\nPoll ``GET /operations/{operation_id}`` until\n``done`` is ``true``, then read the generated\npanorama URL from ``response.pano_url``."
+      examples:
+      - depth_pano_image:
+          source: uri
+          uri: https://example.com/depth.exr
+        text_prompt: The scene is a warm, rustic cabin interior with a realistic style and a cozy winter atmosphere. Wooden walls and exposed beams frame the room, while a stone fireplace casts soft amber light across simple furnishings and natural textures. The 360 scene is faultless.
+      - depth_pano_image:
+          source: uri
+          uri: https://example.com/greenhouse-depth.exr
+        text_prompt: A peaceful greenhouse workshop filled with plants and glassware, with soft sunlight, weathered wood, and ivy creeping along the walls.
+      - depth_pano_image:
+          source: uri
+          uri: https://example.com/depth.png
+        text_prompt: The scene is a warm Mediterranean kitchen rendered in a realistic style with a bright, welcoming coastal atmosphere. The overall tone is relaxed and sunlit, combining natural materials with crisp handcrafted details. Blue ceramic tiles wrap the backsplash and continue across key architectural surfaces, giving the room a cool accent against creamy plaster walls. Wooden cabinetry lines the perimeter in a balanced arrangement, with paneled doors, open shelving, and brass hardware contributing to the room's refined but lived-in character. A broad countertop of pale stone runs between the cabinets, creating a continuous work surface that anchors the cooking area. A central table with a solid wood top occupies the middle of the room, surrounded by simple chairs and small ceramic vessels that reinforce the artisanal style. Arched openings connect the kitchen to adjacent areas, while French doors admit generous daylight and suggest an outdoor terrace nearby. Terracotta accents, woven textures, and neatly arranged cookware add visual richness without cluttering the space. The cabinetry, tiled surfaces, and stone counters form a coherent ring around the room, while the table remains the central focal element within the composition. The 360 scene is faultless.
+        z_max: 100
+        z_min: 0.1
       properties:
-        deleted:
-          description: Whether the world was successfully deleted
-          title: Deleted
-          type: boolean
-        world_id:
-          description: ID of the deleted world
-          title: World Id
-          type: string
-      required:
-      - world_id
-      - deleted
-      title: DeleteWorldResponse
-      type: object
-    InpaintPanoPrompt:
-      description: For models that inpaint the masked portion of a pano image.
-      properties:
-        pano_image:
-          $ref: '#/components/schemas/Content'
-        pano_mask:
-          $ref: '#/components/schemas/Content'
-        text_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Text Prompt
-        type:
-          const: inpaint-pano
-          default: inpaint-pano
-          title: Type
-          type: string
-      required:
-      - pano_image
-      - pano_mask
-      title: InpaintPanoPrompt
-      type: object
-    ExportWorldRequest:
-      description: Request to export a generated world asset.
-      properties:
-        asset_type:
-          description: 'Asset family to export: ''splats'' or ''mesh''.'
-          enum:
-          - splats
-          - mesh
-          title: Asset Type
-          type: string
-        format:
-          description: Requested export format.
-          enum:
-          - ply
-          - glb
-          title: Format
-          type: string
-        mesh_variant:
-          default: textured
-          description: Mesh variant to return when an HQ mesh already exists.
-          enum:
-          - textured
-          - vertex_colored
-          title: Mesh Variant
-          type: string
-        resolution:
-          default: full_res
-          description: Splat resolution to convert when exporting splats as PLY.
-          enum:
-          - full_res
-          - 500k
-          - 150k
-          - 100k
-          title: Resolution
-          type: string
-      required:
-      - asset_type
-      - format
-      title: ExportWorldRequest
-      type: object
-    UploadUrlInfo:
-      description: Information required to upload raw bytes directly to storage.
-      properties:
-        curl_example:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional curl example for convenience
-          title: Curl Example
-        required_headers:
-          anyOf:
-          - additionalProperties:
-              type: string
-            type: object
-          - type: 'null'
-          description: Headers that MUST be included when uploading (e.g. Content-Type)
-          title: Required Headers
-        upload_method:
-          description: Upload method
-          title: Upload Method
-          type: string
-        upload_url:
-          description: Signed URL for uploading bytes via PUT
-          title: Upload Url
-          type: string
-      required:
-      - upload_url
-      - upload_method
-      title: UploadUrlInfo
-      type: object
-    World:
-      description: A generated world, including asset URLs.
-      properties:
-        assets:
-          anyOf:
-          - $ref: '#/components/schemas/WorldAssets'
-          - type: 'null'
-          description: Generated world assets
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp
-          title: Created At
-        display_name:
-          description: Display name
-          title: Display Name
-          type: string
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Model used for generation
-          title: Model
-        permission:
-          anyOf:
-          - $ref: '#/components/schemas/Permission'
-          - type: 'null'
-          description: Access control permissions for the world
-        tags:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          description: Tags associated with the world
-          title: Tags
-        updated_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Last update timestamp
-          title: Updated At
-        world_id:
-          description: World identifier
-          title: World Id
-          type: string
-        world_marble_url:
-          description: World Marble URL
-          title: World Marble Url
-          type: string
-        world_prompt:
-          anyOf:
-          - discriminator:
-              mapping:
-                depth-pano: '#/components/schemas/DepthPanoPrompt'
-                image: '#/components/schemas/Prompt'
-                inpaint-pano: '#/components/schemas/InpaintPanoPrompt'
-                multi-image: '#/components/schemas/MultiImagePrompt-Output'
-                text: '#/components/schemas/WorldTextPrompt-Output'
-                video: '#/components/schemas/VideoPrompt-Output'
-              propertyName: type
-            oneOf:
-            - $ref: '#/components/schemas/WorldTextPrompt-Output'
-            - $ref: '#/components/schemas/Prompt'
-            - $ref: '#/components/schemas/MultiImagePrompt-Output'
-            - $ref: '#/components/schemas/VideoPrompt-Output'
-            - $ref: '#/components/schemas/DepthPanoPrompt'
-            - $ref: '#/components/schemas/InpaintPanoPrompt'
-          - type: 'null'
-          description: World prompt
-          title: World Prompt
-      required:
-      - world_id
-      - display_name
-      - world_marble_url
-      title: World
-      type: object
-    ImagePrompt:
-      description: 'Image-to-world generation.
-
-
-        Generates a world from an image. text_prompt is optional - if not provided,
-
-        it will be generated via recaptioning.
-
-
-        Recommended image formats: jpg, jpeg, png, webp.'
-      properties:
-        disable_recaption:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: If True, use text_prompt as-is without recaptioning
-          title: Disable Recaption
-        image_prompt:
-          description: Image content for world generation
+        depth_pano_image:
+          description: Depth panorama image (EXR or PNG). Provide via URI, media_asset, or base64 (max 100 MB).
           discriminator:
             mapping:
               data_base64: '#/components/schemas/DataBase64Reference'
@@ -1657,11 +1514,285 @@ components:
           - $ref: '#/components/schemas/MediaAssetReference'
           - $ref: '#/components/schemas/UriReference'
           - $ref: '#/components/schemas/DataBase64Reference'
-          title: Image Prompt
-        is_pano:
-          $ref: '#/components/schemas/PanoDetectionMode'
-          default: auto
-          description: How to treat the image input as a panorama. `auto` detects valid equirectangular panoramas, `true` always uses the image as a panorama, and `false` treats it as a standard image.
+          title: Depth Pano Image
+        seed:
+          anyOf:
+          - maximum: 4294967295
+            minimum: 0
+            type: integer
+          - type: 'null'
+          description: Random seed for reproducible generation.
+          title: Seed
+        text_prompt:
+          description: Text description of the desired appearance.
+          title: Text Prompt
+          type: string
+        z_max:
+          anyOf:
+          - exclusiveMinimum: 0
+            type: number
+          - type: 'null'
+          description: Maximum depth. Required for PNG depth maps (normalized to [0, 1]). Must be provided together with z_min and must be greater than z_min. Omit for EXR depth maps.
+          title: Z Max
+        z_min:
+          anyOf:
+          - exclusiveMinimum: 0
+            type: number
+          - type: 'null'
+          description: Minimum depth. Required for PNG depth maps (normalized to [0, 1]). Must be provided together with z_max. Omit for EXR depth maps.
+          title: Z Min
+      required:
+      - depth_pano_image
+      - text_prompt
+      title: PanoDepthToRgbRequest
+      type: object
+    MediaAssetKind:
+      description: High-level media asset type.
+      enum:
+      - image
+      - video
+      title: MediaAssetKind
+      type: string
+    ExportWorldResponse:
+      description: Response from world export endpoint.
+      properties:
+        cost:
+          anyOf:
+          - $ref: '#/components/schemas/OperationCost'
+          - type: 'null'
+          description: Settled credit cost for the operation. Populated only on successful completion.
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        done:
+          description: True if the operation is completed
+          title: Done
+          type: boolean
+        error:
+          anyOf:
+          - $ref: '#/components/schemas/OperationError'
+          - type: 'null'
+          description: Error information if the operation failed
+        expires_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Expiration timestamp
+          title: Expires At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Service-specific metadata, such as progress percentage
+          title: Metadata
+        operation_id:
+          description: Operation identifier
+          title: Operation Id
+          type: string
+        response:
+          anyOf:
+          - $ref: '#/components/schemas/ExportWorldResult'
+          - type: 'null'
+          description: Result payload when done=true and no error. Structure depends on operation type.
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - operation_id
+      - done
+      title: ExportWorldResponse
+      type: object
+    DataBase64Reference:
+      description: Reference to content via base64-encoded data.
+      properties:
+        data_base64:
+          description: Base64-encoded content data
+          title: Data Base64
+          type: string
+        extension:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File extension without dot (e.g., 'jpg', 'png')
+          title: Extension
+        source:
+          const: data_base64
+          default: data_base64
+          title: Source
+          type: string
+      required:
+      - data_base64
+      title: DataBase64Reference
+      type: object
+    MultiImagePrompt-Output:
+      description: For world models supporting multi-image (+ text) input.
+      properties:
+        multi_image_prompt:
+          items:
+            $ref: '#/components/schemas/SphericallyLocatedContent-Output'
+          title: Multi Image Prompt
+          type: array
+        reconstruct_images:
+          default: false
+          title: Reconstruct Images
+          type: boolean
+        text_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text Prompt
+        type:
+          const: multi-image
+          default: multi-image
+          title: Type
+          type: string
+      required:
+      - multi_image_prompt
+      title: MultiImagePrompt
+      type: object
+    SphericallyLocatedContent-Input:
+      description: Content with a preferred location on the sphere.
+      properties:
+        azimuth:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Azimuth angle in degrees
+          title: Azimuth
+        content:
+          description: The content at this location
+          discriminator:
+            mapping:
+              data_base64: '#/components/schemas/DataBase64Reference'
+              media_asset: '#/components/schemas/MediaAssetReference'
+              uri: '#/components/schemas/UriReference'
+            propertyName: source
+          oneOf:
+          - $ref: '#/components/schemas/MediaAssetReference'
+          - $ref: '#/components/schemas/UriReference'
+          - $ref: '#/components/schemas/DataBase64Reference'
+          title: Content
+      required:
+      - content
+      title: SphericallyLocatedContent
+      type: object
+    Permission:
+      description: Access control permissions for a resource.
+      properties:
+        allow_id_access:
+          default: false
+          title: Allow Id Access
+          type: boolean
+        allowed_readers:
+          items:
+            type: string
+          title: Allowed Readers
+          type: array
+        allowed_writers:
+          items:
+            type: string
+          title: Allowed Writers
+          type: array
+        public:
+          default: false
+          title: Public
+          type: boolean
+      title: Permission
+      type: object
+    OperationCostLineItem:
+      description: A single usage event contributing to an operation's total credits.
+      properties:
+        credits:
+          description: Credits charged for this usage event
+          title: Credits
+          type: integer
+        name:
+          description: Human-readable usage event name
+          title: Name
+          type: string
+      required:
+      - name
+      - credits
+      title: OperationCostLineItem
+      type: object
+    DepthPanoPrompt:
+      description: 'For models conditioned on a depth pano and text.
+
+        When depth_pano_image is a log-encoded PNG, z_min and z_max are required
+
+        to decode it correctly. When it is an EXR file containing raw float depth
+
+        values, z_min and z_max will both be ignored.
+
+        Please set z_min and z_max both to None when using an EXR file.'
+      properties:
+        depth_pano_image:
+          $ref: '#/components/schemas/Content'
+        text_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text Prompt
+        type:
+          const: depth-pano
+          default: depth-pano
+          title: Type
+          type: string
+        z_max:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Z Max
+        z_min:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Z Min
+      required:
+      - depth_pano_image
+      title: DepthPanoPrompt
+      type: object
+    VideoPrompt-Output:
+      description: For world models supporting video (+ text) input.
+      properties:
+        text_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text Prompt
+        type:
+          const: video
+          default: video
+          title: Type
+          type: string
+        video_prompt:
+          $ref: '#/components/schemas/Content'
+      required:
+      - video_prompt
+      title: VideoPrompt
+      type: object
+    WorldTextPrompt-Input:
+      description: 'Text-to-world generation.
+
+
+        Generates a world from a text description. text_prompt is REQUIRED.'
+      properties:
+        disable_recaption:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If True, use text_prompt as-is without recaptioning
+          title: Disable Recaption
         text_prompt:
           anyOf:
           - type: string
@@ -1669,13 +1800,30 @@ components:
           description: Optional text guidance (auto-generated if not provided)
           title: Text Prompt
         type:
-          const: image
-          default: image
+          const: text
+          default: text
           title: Type
           type: string
+      title: WorldTextPrompt
+      type: object
+    ListWorldsResponse:
+      description: Response containing a list of API-generated worlds.
+      properties:
+        next_page_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Token for fetching the next page of results
+          title: Next Page Token
+        worlds:
+          description: List of worlds
+          items:
+            $ref: '#/components/schemas/World'
+          title: Worlds
+          type: array
       required:
-      - image_prompt
-      title: ImagePrompt
+      - worlds
+      title: ListWorldsResponse
       type: object
     ListWorldsRequest:
       description: Request to list API-generated worlds with optional filters.
@@ -1780,42 +1928,227 @@ components:
           title: Tags
       title: ListWorldsRequest
       type: object
-    DepthPanoPrompt:
-      description: 'For models conditioned on a depth pano and text.
-
-        When depth_pano_image is a log-encoded PNG, z_min and z_max are required
-
-        to decode it correctly. When it is an EXR file containing raw float depth
-
-        values, z_min and z_max will both be ignored.
-
-        Please set z_min and z_max both to None when using an EXR file.'
+    UploadUrlInfo:
+      description: Information required to upload raw bytes directly to storage.
       properties:
-        depth_pano_image:
-          $ref: '#/components/schemas/Content'
+        curl_example:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional curl example for convenience
+          title: Curl Example
+        required_headers:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          description: Headers that MUST be included when uploading (e.g. Content-Type)
+          title: Required Headers
+        upload_method:
+          description: Upload method
+          title: Upload Method
+          type: string
+        upload_url:
+          description: Signed URL for uploading bytes via PUT
+          title: Upload Url
+          type: string
+      required:
+      - upload_url
+      - upload_method
+      title: UploadUrlInfo
+      type: object
+    OperationCost:
+      description: Settled credit cost for a successful operation.
+      properties:
+        line_items:
+          description: Usage events that make up the operation's total credits
+          items:
+            $ref: '#/components/schemas/OperationCostLineItem'
+          title: Line Items
+          type: array
+        total_credits:
+          description: Total credits charged for the operation
+          title: Total Credits
+          type: integer
+      required:
+      - total_credits
+      title: OperationCost
+      type: object
+    MediaAsset:
+      description: 'A user-uploaded media asset stored in managed storage.
+
+
+        MediaAssets can be images, videos, or binary blobs that are used
+
+        as input to world generation.'
+      properties:
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: Created At
+          type: string
+        extension:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File extension without dot
+          examples:
+          - mp4
+          - png
+          - jpg
+          title: Extension
+        file_name:
+          description: File name
+          title: File Name
+          type: string
+        kind:
+          $ref: '#/components/schemas/MediaAssetKind'
+          description: High-level media type
+          examples:
+          - image
+          - video
+        media_asset_id:
+          description: Server-generated media asset identifier
+          title: Media Asset Id
+          type: string
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Optional application-specific metadata
+          title: Metadata
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - media_asset_id
+      - file_name
+      - kind
+      - created_at
+      title: MediaAsset
+      type: object
+    UriReference:
+      description: Reference to content via a publicly accessible URL.
+      properties:
+        source:
+          const: uri
+          default: uri
+          title: Source
+          type: string
+        uri:
+          description: Publicly accessible URL pointing to the media
+          title: Uri
+          type: string
+      required:
+      - uri
+      title: UriReference
+      type: object
+    ImageryAssets:
+      description: Imagery asset URLs.
+      properties:
+        pano_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Panorama image URL
+          title: Pano Url
+      title: ImageryAssets
+      type: object
+    VideoPrompt-Input:
+      description: 'Video-to-world generation.
+
+
+        Generates a world from a video. text_prompt is optional.
+
+
+        Recommended video formats: mp4, webm, mov, avi.
+
+        Maximum video size: 100MB.'
+      properties:
+        disable_recaption:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If True, use text_prompt as-is without recaptioning
+          title: Disable Recaption
         text_prompt:
           anyOf:
           - type: string
           - type: 'null'
+          description: Optional text guidance (auto-generated if not provided)
           title: Text Prompt
         type:
-          const: depth-pano
-          default: depth-pano
+          const: video
+          default: video
           title: Type
           type: string
-        z_max:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Z Max
-        z_min:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Z Min
+        video_prompt:
+          description: Video content for world generation
+          discriminator:
+            mapping:
+              data_base64: '#/components/schemas/DataBase64Reference'
+              media_asset: '#/components/schemas/MediaAssetReference'
+              uri: '#/components/schemas/UriReference'
+            propertyName: source
+          oneOf:
+          - $ref: '#/components/schemas/MediaAssetReference'
+          - $ref: '#/components/schemas/UriReference'
+          - $ref: '#/components/schemas/DataBase64Reference'
+          title: Video Prompt
       required:
-      - depth_pano_image
-      title: DepthPanoPrompt
+      - video_prompt
+      title: VideoPrompt
+      type: object
+    PanoDetectionMode:
+      enum:
+      - auto
+      - true
+      - false
+    ExportWorldRequest:
+      description: Request to export a generated world asset.
+      properties:
+        asset_type:
+          description: 'Asset family to export: ''splats'' or ''mesh''.'
+          enum:
+          - splats
+          - mesh
+          title: Asset Type
+          type: string
+        format:
+          description: Requested export format.
+          enum:
+          - ply
+          - glb
+          title: Format
+          type: string
+        mesh_variant:
+          default: textured
+          description: Mesh variant to return when an HQ mesh already exists.
+          enum:
+          - textured
+          - vertex_colored
+          title: Mesh Variant
+          type: string
+        resolution:
+          default: full_res
+          description: Splat resolution to convert when exporting splats as PLY.
+          enum:
+          - full_res
+          - 500k
+          - 150k
+          - 100k
+          title: Resolution
+          type: string
+      required:
+      - asset_type
+      - format
+      title: ExportWorldRequest
       type: object
   securitySchemes:
     ApiKeyAuth:

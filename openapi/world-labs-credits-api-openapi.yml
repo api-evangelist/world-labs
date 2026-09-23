@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   description: Public-facing API for the Marble platform
   summary: Marble Public API v1
-  title: Marble Public API v1 credits API
+  title: Marble Public API v1 Credits API
   version: 1.0.0
 servers:
 - description: World API
@@ -10,11 +10,23 @@ servers:
 security:
 - ApiKeyAuth: []
 tags:
-- name: credits
+- name: Credits
 paths:
   /marble/v1/credits:
     get:
-      description: "Get remaining API credits for the authenticated user.\n\nReturns:\n    CreditsResponse with the current aggregate API credit balance.\n\nRaises:\n    HTTPException: 404 if the caller is not an API-enabled user\n    HTTPException: 503 if the billing backend is unavailable"
+      description: 'Get remaining API credits for the authenticated user.
+
+
+        Returns:
+
+        CreditsResponse with the current aggregate API credit balance.
+
+
+        Raises:
+
+        HTTPException: 404 if the caller is not an API-enabled user
+
+        HTTPException: 503 if the billing backend is unavailable'
       operationId: get_credits_marble_v1_credits_get
       responses:
         '200':
@@ -25,7 +37,7 @@ paths:
           description: Successful Response
       summary: Get Credits
       tags:
-      - credits
+      - Credits
 components:
   schemas:
     CreditsResponse:
