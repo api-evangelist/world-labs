@@ -46,7 +46,7 @@ tags_raw:
 - Ai
 apis:
 - aid: world-labs:world-labs-credits-api
-  name: World Labs credits API
+  name: World Labs Credits API
   description: The credits API from World Labs — 1 operation(s) for credits.
   tags:
   - Credit
